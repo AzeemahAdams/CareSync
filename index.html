@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Healthcare access, navigation and referrals — CareSync</title>
+    <meta
+      name="description"
+      content="CareSync helps people find appropriate healthcare facilities, understand services and navigate referrals."
+    />
+    <meta name="theme-color" content="#1E293B" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/landing.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  </head>
+  <body>
+    <div id="site-header"></div>
+    <main id="main">
+      <section class="hero">
+        <div class="container hero-inner">
+          <div>
+            <p class="eyebrow">Healthcare access platform</p>
+            <h1>Find the right care, and the way there.</h1>
+            <p>
+              CareSync helps you discover healthcare facilities, compare their
+              services, and understand referrals, even on a slow connection. It
+              does not diagnose conditions or dispatch ambulances.
+            </p>
+            <div class="hero-cta">
+              <a
+                class="btn btn-primary"
+                href="patient/find-care.html"
+                data-i18n="hero.cta1"
+                >Find Healthcare</a
+              >
+              <a
+                class="btn btn-secondary"
+                href="how-it-works.html"
+                data-i18n="hero.cta2"
+                >Learn How It Works</a
+              >
+            </div>
+          </div>
+
+          <!-- Functional Map Preview Container -->
+          <div
+            class="hero-visual-container"
+            aria-label="Interactive preview of CareSync facility discovery"
+          >
+            <div class="map-wrapper">
+              <!-- The actual Leaflet map will render here -->
+              <div
+                id="hero-map"
+                class="hero-map"
+                role="application"
+                aria-label="Map showing sample healthcare facilities"
+              ></div>
+
+              <!-- Overlay Card: Shows details when a marker is clicked -->
+              <div
+                id="hero-result-card"
+                class="hero-result-card hidden"
+                aria-live="polite"
+              >
+                <div class="card-content">
+                  <h4 id="result-name" class="text-lg font-bold text-primary">
+                    Facility Name
+                  </h4>
+                  <p id="result-distance" class="text-sm text-secondary">
+                    Distance: -- km
+                  </p>
+                  <span id="result-status" class="badge badge-success"
+                    >Verified</span
+                  >
+                </div>
+                <button class="btn btn-sm btn-outline" onclick="hideHeroCard()">
+                  Close
+                </button>
+              </div>
+            </div>
+
+            <div class="visual-footer">
+              <span class="text-xs text-muted"
+                >Live interactive preview • Click pins to view details</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="search-wrap">
+        <div class="container">
+          <form
+            id="hero-search"
+            class="card search-bar"
+            novalidate
+            aria-label="Find healthcare"
+          >
+            <div class="field">
+              <label for="s-loc">Location</label
+              ><input
+                class="input"
+                id="s-loc"
+                name="location"
+                data-label="Location"
+                placeholder="Town or area, e.g. Abeokuta"
+                required
+                autocomplete="address-level2"
+              /><span class="field-error" id="s-loc-error" role="alert"></span>
+            </div>
+            <div class="field">
+              <label for="s-svc">Healthcare service</label
+              ><select class="select" id="s-svc" name="service">
+                <option value="">Any service</option>
+                <option>General consultation</option>
+                <option>Maternal health</option>
+                <option>Paediatrics</option>
+                <option>Dental care</option>
+                <option>Laboratory tests</option>
+                <option>Eye care</option>
+                <option>Pharmacy</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="s-type">Facility type</label
+              ><select class="select" id="s-type" name="type">
+                <option value="">Any type</option>
+                <option>Hospital</option>
+                <option>Primary health centre</option>
+                <option>Clinic</option>
+                <option>Pharmacy</option>
+                <option>Diagnostic laboratory</option>
+              </select>
+            </div>
+            <button
+              class="btn btn-primary"
+              type="submit"
+              data-i18n="search.btn"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>Demo metrics</h2>
+            <p>
+              These figures describe the sample dataset in this demonstration.
+              They are not real users, partners or verified facilities.
+            </p>
+          </div>
+          <div class="grid grid-4">
+            <div class="card">
+              <p class="stat">24</p>
+              <p class="text-secondary">Sample facilities (synthetic)</p>
+            </div>
+            <div class="card">
+              <p class="stat">12</p>
+              <p class="text-secondary">Sample services (synthetic)</p>
+            </div>
+            <div class="card">
+              <p class="stat">2</p>
+              <p class="text-secondary">Interface languages</p>
+            </div>
+            <div class="card">
+              <p class="stat">3</p>
+              <p class="text-secondary">User roles: patient, facility, admin</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="padding-top: 0">
+        <div class="container">
+          <div class="section-head">
+            <h2>Core services</h2>
+            <p>Four tools that make healthcare access clearer.</p>
+          </div>
+          <div class="grid grid-4">
+            <article class="card">
+              <span class="icon-box" data-icon="search"></span>
+              <h3>Find Healthcare</h3>
+              <p class="text-secondary">
+                Search facilities by name, location, service and accessibility.
+              </p>
+            </article>
+            <article class="card">
+              <span class="icon-box" data-icon="sliders"></span>
+              <h3>Smart Facility Matching</h3>
+              <p class="text-secondary">
+                A transparent scoring method that shows why a facility fits your
+                needs.
+              </p>
+            </article>
+            <article class="card">
+              <span class="icon-box" data-icon="alert"></span>
+              <h3>Emergency Navigation</h3>
+              <p class="text-secondary">
+                Nearby facility contacts and directions. It never contacts
+                emergency services for you.
+              </p>
+            </article>
+            <article class="card">
+              <span class="icon-box" data-icon="swap"></span>
+              <h3>Digital Referrals</h3>
+              <p class="text-secondary">
+                Track referrals between providers from pending to completed.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band">
+        <div class="container">
+          <div class="section-head"><h2>How it works</h2></div>
+          <ol class="grid grid-4">
+            <li>
+              <span class="step-num">1</span>
+              <h3 style="color: #fff">Describe your need</h3>
+              <p>Choose a service and location.</p>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <h3 style="color: #fff">Compare facilities</h3>
+              <p>See services, accessibility and verification status.</p>
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              <h3 style="color: #fff">Understand the match</h3>
+              <p>Read why each facility is suggested.</p>
+            </li>
+            <li>
+              <span class="step-num">4</span>
+              <h3 style="color: #fff">Follow referrals</h3>
+              <p>Track progress between providers.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head"><h2>Why CareSync</h2></div>
+          <div class="grid grid-3">
+            <div class="card">
+              <span class="icon-box" data-icon="shield"></span>
+              <h3>Clear information status</h3>
+              <p class="text-secondary">
+                Every facility shows whether its details are verified, pending
+                or unverified, with a last-updated date.
+              </p>
+            </div>
+            <div class="card">
+              <span class="icon-box" data-icon="eye"></span>
+              <h3>Explainable matching</h3>
+              <p class="text-secondary">
+                Match scores come from a defined method, never arbitrary
+                percentages.
+              </p>
+            </div>
+            <div class="card">
+              <span class="icon-box" data-icon="heart"></span>
+              <h3>Honest by design</h3>
+              <p class="text-secondary">
+                No invented bed availability. No diagnosis. Simulated data is
+                always labelled.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="padding-top: 0">
+        <div class="container">
+          <div class="section-head">
+            <h2>Platform preview</h2>
+            <p>Simplified previews with synthetic data.</p>
+          </div>
+          <div class="grid grid-3">
+            <div class="card">
+              <h3>Patient</h3>
+              <div class="preview" aria-label="Sample patient matches">
+                <div class="row">
+                  <span>Sample Clinic A</span
+                  ><span class="badge badge-success">✓ Verified</span>
+                </div>
+                <div class="row">
+                  <span>Sample Health Centre B</span
+                  ><span class="badge badge-warning">⏳ Pending</span>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Facility</h3>
+              <div class="preview" aria-label="Sample referral queue">
+                <div class="row">
+                  <span>Referral #1042</span
+                  ><span class="badge badge-info">Pending</span>
+                </div>
+                <div class="row">
+                  <span>Referral #1039</span
+                  ><span class="badge badge-success">Accepted</span>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Administrator</h3>
+              <div class="preview" aria-label="Sample verification queue">
+                <div class="row">
+                  <span>Awaiting review</span><strong>5</strong>
+                </div>
+                <div class="row">
+                  <span>Verified this week</span><strong>3</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band">
+        <div class="container">
+          <div class="section-head"><h2>Built for real-world access</h2></div>
+          <ul class="checklist grid grid-3">
+            <li>
+              <span data-icon="phone"></span
+              ><span
+                ><strong>Mobile-first.</strong> Comfortable tap targets and
+                single-column layouts.</span
+              >
+            </li>
+            <li>
+              <span data-icon="zap"></span
+              ><span
+                ><strong>Low-bandwidth.</strong> Lightweight pages, no heavy
+                frameworks, offline fallback planned.</span
+              >
+            </li>
+            <li>
+              <span data-icon="lang"></span
+              ><span
+                ><strong>English and Yoruba.</strong> Hausa and Igbo can be
+                added later.</span
+              >
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container card" style="text-align: center">
+          <h2>Ready to explore CareSync?</h2>
+          <p
+            class="text-secondary"
+            style="margin: var(--space-3) auto var(--space-5); max-width: 52ch"
+          >
+            Create an account to try the patient, facility or administrator
+            experience in demo mode.
+          </p>
+          <a
+            class="btn btn-primary"
+            href="auth/register.html"
+            data-i18n="nav.start"
+            >Get Started</a
+          >
+        </div>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/config/api-config.js"></script>
+    <script src="js/config/translations.js"></script>
+    <script src="js/components/icons.js"></script>
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/layout.js"></script>
+    <script src="js/components/language-switcher.js"></script>
+    <script src="js/components/navigation.js"></script>
+    <script src="js/components/form-validation.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/pages/landing.js"></script>
+  </body>
+</html>
