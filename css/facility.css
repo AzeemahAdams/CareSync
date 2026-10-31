@@ -1,0 +1,85 @@
+/* ─────────────────────────────────────────────
+   facility.css — Healthcare Facility dashboard
+   Builds on patient.css app-shell; only facility-specific overrides here.
+   ───────────────────────────────────────────── */
+
+/* Sidebar accent colour for facility role */
+.role-facility .sidebar-nav-item a.active,
+.role-facility .sidebar-nav-item a[aria-current="page"] {
+  background: #ECFDF5;
+  color: #065F46;
+}
+
+.role-facility .sidebar-nav-item a.active svg,
+.role-facility .sidebar-nav-item a[aria-current="page"] svg {
+  color: var(--color-success);
+}
+
+/* Profile completion bar */
+.completion-wrap {
+  background: var(--color-background);
+  border-radius: var(--radius-md);
+  height: 8px;
+  overflow: hidden;
+  margin-top: var(--space-2);
+}
+
+.completion-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: var(--radius-md);
+  transition: width 0.6s ease;
+}
+
+/* Referral action row */
+.referral-action-row {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-3);
+}
+
+/* Inline edit form overlay */
+.inline-edit-form {
+  background: var(--color-background);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-top: var(--space-3);
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.inline-edit-form.open { display: grid; }
+
+@media (max-width: 639px) {
+  .inline-edit-form { grid-template-columns: 1fr; }
+}
+
+/* Status badge pill */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px var(--space-3);
+  border-radius: 100px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.status-pill::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.status-pending  { background: var(--color-warning-bg); color: #92400E; }
+.status-accepted { background: var(--color-primary-light); color: var(--color-primary-dark); }
+.status-in-progress { background: #EDE9FE; color: #5B21B6; }
+.status-completed   { background: var(--color-success-bg); color: #166534; }
+.status-declined    { background: var(--color-danger-bg); color: #991B1B; }
+.status-verified    { background: var(--color-success-bg); color: #166534; }
+.status-unverified  { background: var(--color-danger-bg); color: #991B1B; }

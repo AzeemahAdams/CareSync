@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login — CareRoute</title>
+  <meta name="description" content="Log in to your CareRoute account.">
+  <meta name="theme-color" content="#1E293B">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/auth.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-base="../" class="auth-body">
+
+<div class="auth-page">
+
+  <!-- ── Left brand panel ─────────────────────────────────────── -->
+  <div class="auth-brand" aria-hidden="true">
+    <a class="auth-brand-logo" href="../index.html">
+      <svg width="32" height="32" viewBox="0 0 28 28" aria-hidden="true">
+        <rect width="28" height="28" rx="8" fill="#3B82F6"/>
+        <path d="M8 14h4l2-4 3 8 2-4h1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Care<span>Route</span>
+    </a>
+
+    <div class="auth-brand-content">
+      <h2>Healthcare access for everyone.</h2>
+      <p>Find appropriate facilities, navigate referrals, and access emergency healthcare information — all in one place.</p>
+
+      <div class="auth-brand-features">
+        <div class="auth-brand-feature">
+          <div class="auth-brand-feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </div>
+          <div class="auth-brand-feature-text">
+            <strong>Intelligent facility discovery</strong>
+            <span>Find the right care for your specific needs.</span>
+          </div>
+        </div>
+        <div class="auth-brand-feature">
+          <div class="auth-brand-feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+          </div>
+          <div class="auth-brand-feature-text">
+            <strong>Smart facility matching</strong>
+            <span>Transparent scoring you can understand.</span>
+          </div>
+        </div>
+        <div class="auth-brand-feature">
+          <div class="auth-brand-feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m17 3 4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3"/></svg>
+          </div>
+          <div class="auth-brand-feature-text">
+            <strong>Digital referral tracking</strong>
+            <span>Follow your referral from start to finish.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="auth-brand-footer">Demo mode &mdash; all data is synthetic.</p>
+  </div>
+
+  <!-- ── Right form panel ──────────────────────────────────────── -->
+  <div class="auth-form-panel">
+    <div class="auth-card">
+
+      <!-- Mobile logo (hidden on desktop) -->
+      <a class="auth-mobile-logo" href="../index.html">
+        <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+          <rect width="28" height="28" rx="8" fill="#3B82F6"/>
+          <path d="M8 14h4l2-4 3 8 2-4h1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Care<span>Route</span>
+      </a>
+
+      <div class="auth-header">
+        <h1>Welcome back</h1>
+        <p>Log in to your CareRoute account to continue.</p>
+      </div>
+
+      <!-- Demo credentials hint -->
+      <div class="auth-demo-note" role="note">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div>
+          <strong>Demo credentials:</strong>
+          Patient: <code>patient@demo.com</code> &nbsp;|&nbsp;
+          Facility: <code>facility@demo.com</code> &nbsp;|&nbsp;
+          Admin: <code>admin@demo.com</code><br>
+          Password for all: <code>Demo1234!</code>
+        </div>
+      </div>
+
+      <!-- Form-level alert -->
+      <div id="login-alert" class="auth-alert" hidden aria-live="polite">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <span class="alert-msg"></span>
+      </div>
+
+      <form id="login-form" class="auth-form" novalidate aria-label="Login form">
+
+        <!-- Email -->
+        <div class="field">
+          <label for="login-email">Email address</label>
+          <div class="input-group">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+            </span>
+            <input
+              class="input"
+              id="login-email"
+              name="email"
+              type="email"
+              data-label="Email address"
+              placeholder="you@example.com"
+              required
+              autocomplete="email"
+            >
+          </div>
+          <span class="field-error" id="login-email-error" role="alert"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="field">
+          <label for="login-password">Password</label>
+          <div class="input-group">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input
+              class="input has-suffix"
+              id="login-password"
+              name="password"
+              type="password"
+              data-label="Password"
+              placeholder="Your password"
+              required
+              autocomplete="current-password"
+            >
+            <button
+              type="button"
+              class="input-suffix"
+              id="toggle-password"
+              aria-label="Show password"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <span class="field-error" id="login-password-error" role="alert"></span>
+        </div>
+
+        <!-- Remember me / Forgot password -->
+        <div class="auth-form-row">
+          <label class="checkbox-group">
+            <input type="checkbox" name="remember" id="remember-me">
+            Remember me
+          </label>
+          <a class="auth-link" href="#forgot" id="forgot-link">Forgot password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="btn btn-primary btn-auth"
+          id="login-submit"
+          aria-live="polite"
+        >
+          <span data-label="Log in">Log in</span>
+        </button>
+
+      </form>
+
+      <div class="auth-bottom">
+        Don&rsquo;t have an account? <a href="register.html">Create one</a>
+      </div>
+
+    </div><!-- /.auth-card -->
+  </div><!-- /.auth-form-panel -->
+
+</div><!-- /.auth-page -->
+
+<script src="../js/config/api-config.js"></script>
+<script src="../js/config/translations.js"></script>
+<script src="../js/components/icons.js"></script>
+<script src="../js/components/toast.js"></script>
+<script src="../js/components/modal.js"></script>
+<script src="../js/components/form-validation.js"></script>
+<script src="../js/services/api-service.js"></script>
+<script src="../js/services/auth-service.js"></script>
+<script src="../js/pages/auth.js"></script>
+
+<script>
+// Forgot password modal (demo — no backend endpoint yet)
+document.getElementById('forgot-link').addEventListener('click', function (e) {
+  e.preventDefault();
+  CareSync.modal.open({
+    title: 'Forgot password',
+    body: 'Password reset is not available in demo mode. Use the demo credentials shown above to log in.',
+    actions: [{ label: 'OK', variant: 'primary' }]
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — CareRoute Patient</title>
+  <meta name="theme-color" content="#1E293B">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/patient.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Topbar -->
+  <header class="app-topbar">
+    <button class="sidebar-toggle" aria-label="Toggle sidebar">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <a class="topbar-logo" href="../index.html">
+      <svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#3B82F6"/><path d="M8 14h4l2-4 3 8 2-4h1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Care<span>Route</span>
+    </a>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-actions">
+      <span class="topbar-name"></span>
+      <div class="topbar-avatar" title="Profile" aria-hidden="true">A</div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <div class="sidebar-overlay"></div>
+  <aside class="app-sidebar" aria-label="Patient navigation">
+    <p class="sidebar-section-label">Patient</p>
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="dashboard.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Overview</a></li>
+      <li class="sidebar-nav-item"><a href="find-care.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> Find Healthcare</a></li>
+      <li class="sidebar-nav-item"><a href="smart-matching.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg> Smart Matching</a></li>
+      <li class="sidebar-nav-item"><a href="emergency.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg> Emergency</a></li>
+      <li class="sidebar-nav-item"><a href="referrals.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m17 3 4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3"/></svg> My Referrals</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <p class="sidebar-section-label">Account</p>
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="profile.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile</a></li>
+      <li class="sidebar-nav-item danger"><button data-action="logout"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Log out</button></li>
+    </ul>
+  </aside>
+
+  <!-- Main -->
+  <main class="app-main" id="main">
+    <div class="page-header">
+      <h1 id="welcome-heading">Welcome back</h1>
+      <p>Here's an overview of your healthcare activity.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+        <span class="stat-card-value">12</span>
+        <span class="stat-card-label">Facilities searched</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:#DCFCE7;color:#16A34A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m17 3 4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3"/></svg></div>
+        <span class="stat-card-value">5</span>
+        <span class="stat-card-label">Active referrals</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:#FEF3C7;color:#D97706"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <span class="stat-card-value">3</span>
+        <span class="stat-card-label">Saved facilities</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:#EDE9FE;color:#7C3AED"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <span class="stat-card-value">2</span>
+        <span class="stat-card-label">Completed referrals</span>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="section-card">
+      <div class="section-card-header"><h2>Quick actions</h2></div>
+      <div class="section-card-body">
+        <div class="quick-actions">
+          <a class="quick-action-card" href="find-care.html">
+            <div class="quick-action-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+            <h3>Find Healthcare</h3>
+            <p>Search facilities near you</p>
+          </a>
+          <a class="quick-action-card" href="smart-matching.html">
+            <div class="quick-action-icon" style="background:#DCFCE7;color:#16A34A"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></div>
+            <h3>Smart Matching</h3>
+            <p>Get personalised recommendations</p>
+          </a>
+          <a class="quick-action-card" href="referrals.html">
+            <div class="quick-action-icon" style="background:#FEF3C7;color:#D97706"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m17 3 4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3"/></svg></div>
+            <h3>View Referrals</h3>
+            <p>Check your referral status</p>
+          </a>
+          <a class="quick-action-card" href="emergency.html">
+            <div class="quick-action-icon" style="background:#FEE2E2;color:#DC2626"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></div>
+            <h3>Emergency</h3>
+            <p>Nearby emergency facilities</p>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent referrals -->
+    <div class="section-card">
+      <div class="section-card-header">
+        <h2>Recent referrals</h2>
+        <a href="referrals.html" class="btn btn-secondary btn-sm">View all</a>
+      </div>
+      <div class="section-card-body" id="recent-referrals-container">
+        <div class="skeleton" style="height:60px;margin-bottom:12px"></div>
+        <div class="skeleton" style="height:60px;margin-bottom:12px"></div>
+        <div class="skeleton" style="height:60px"></div>
+      </div>
+    </div>
+
+    <!-- Recommended facilities -->
+    <div class="section-card">
+      <div class="section-card-header">
+        <h2>Recommended facilities</h2>
+        <a href="find-care.html" class="btn btn-secondary btn-sm">Browse all</a>
+      </div>
+      <div class="section-card-body" id="recommended-container">
+        <div class="skeleton" style="height:120px;margin-bottom:12px"></div>
+        <div class="skeleton" style="height:120px"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../js/config/api-config.js"></script>
+<script src="../js/config/translations.js"></script>
+<script src="../js/components/icons.js"></script>
+<script src="../js/components/toast.js"></script>
+<script src="../js/components/modal.js"></script>
+<script src="../js/components/form-validation.js"></script>
+<script src="../js/services/api-service.js"></script>
+<script src="../js/services/auth-service.js"></script>
+<script src="../js/services/mock-data.js"></script>
+<script src="../js/services/referral-service.js"></script>
+<script src="../js/services/facility-service.js"></script>
+<script src="../js/components/app-shell.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!CareSync.auth.requireAuth(['patient'])) return;
+  CareSync.appShell.init();
+
+  const session = CareSync.auth.getSession();
+  const storedName = sessionStorage.getItem('cr_name') || 'Patient';
+  document.getElementById('welcome-heading').textContent = 'Welcome back, ' + storedName.split(' ')[0];
+
+  // Load recent referrals
+  try {
+    const refs = await CareSync.referralService.getMyReferrals();
+    const container = document.getElementById('recent-referrals-container');
+    const statusClass = { Pending:'badge-warning', Accepted:'badge-info', 'In progress':'badge-info', Completed:'badge-success', Declined:'badge-danger' };
+    container.innerHTML = refs.slice(0, 3).map(r => `
+      <div class="referral-item">
+        <div class="referral-item-info">
+          <div class="referral-item-id">${r.refNumber}</div>
+          <div class="referral-item-facilities">${r.from} → ${r.to}</div>
+          <div class="referral-item-meta">${r.service} &nbsp;·&nbsp; ${r.date}</div>
+        </div>
+        <div class="referral-item-actions">
+          <span class="badge ${statusClass[r.status]||'badge-info'}">${r.status}</span>
+          <a href="referrals.html" class="btn btn-secondary btn-sm">Details</a>
+        </div>
+      </div>`).join('');
+  } catch { document.getElementById('recent-referrals-container').innerHTML = '<p class="text-secondary">Could not load referrals.</p>'; }
+
+  // Load recommended facilities
+  try {
+    const { results } = await CareSync.facilityService.search({ sort: 'relevance' });
+    const container = document.getElementById('recommended-container');
+    container.innerHTML = results.slice(0, 2).map(f => `
+      <div class="facility-card" style="margin-bottom:var(--space-3)">
+        <div class="facility-card-header">
+          <div><div class="facility-card-name">${f.name}</div><div class="facility-card-type">${f.type}</div></div>
+          <span class="badge ${f.status==='Verified'?'badge-success':f.status==='Pending'?'badge-warning':'badge-danger'}">${f.status}</span>
+        </div>
+        <div class="facility-meta-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> ${f.location} &nbsp;·&nbsp; ${f.distance} km away</div>
+        <div class="facility-card-footer">
+          <div class="facility-card-tags">${f.services.slice(0,3).map(s=>`<span class="tag">${s}</span>`).join('')}</div>
+          <a href="facility-details.html?id=${f.id}" class="btn btn-primary btn-sm">View details</a>
+        </div>
+      </div>`).join('');
+  } catch { document.getElementById('recommended-container').innerHTML = '<p class="text-secondary">Could not load facilities.</p>'; }
+});
+</script>
+</body>
+</html>
