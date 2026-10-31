@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Users — CareRoute Admin</title>
+  <meta name="theme-color" content="#1E293B">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css"><link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css"><link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/patient.css"><link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="app-topbar">
+    <button class="sidebar-toggle" aria-label="Toggle sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <a class="topbar-logo" href="../index.html"><svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#3B82F6"/><path d="M8 14h4l2-4 3 8 2-4h1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Care<span>Route</span></a>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-actions"><span class="topbar-name"></span><div class="topbar-avatar" aria-hidden="true">A</div></div>
+  </header>
+  <div class="sidebar-overlay"></div>
+  <aside class="app-sidebar" aria-label="Admin navigation">
+    <p class="sidebar-section-label">Administration</p>
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="dashboard.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Overview</a></li>
+      <li class="sidebar-nav-item"><a href="users.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> Users</a></li>
+      <li class="sidebar-nav-item"><a href="facilities.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Facilities</a></li>
+      <li class="sidebar-nav-item"><a href="verification.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg> Verification</a></li>
+      <li class="sidebar-nav-item"><a href="referrals.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m17 3 4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3"/></svg> Referrals</a></li>
+      <li class="sidebar-nav-item"><a href="reports.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Reports</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item danger"><button data-action="logout"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Log out</button></li>
+    </ul>
+  </aside>
+
+  <main class="app-main" id="main">
+    <div class="page-header"><h1>User Management</h1><p>Search, filter, and review registered accounts.</p></div>
+
+    <div class="search-filter-bar">
+      <div class="search-filter-row">
+        <div class="search-input-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input class="input" id="user-search" type="search" placeholder="Search by name or email…">
+        </div>
+        <div class="filter-group">
+          <select class="select filter-select" id="user-role-filter">
+            <option value="">All roles</option>
+            <option value="patient">Patient</option>
+            <option value="facility">Facility</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button class="btn btn-primary" id="btn-user-search">Search</button>
+        </div>
+      </div>
+      <p id="user-count" class="text-secondary" style="font-size:var(--fs-sm)"></p>
+    </div>
+
+    <div class="data-table-wrap">
+      <table class="data-table" aria-label="Users table">
+        <thead>
+          <tr>
+            <th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="../js/config/api-config.js"></script>
+<script src="../js/config/translations.js"></script>
+<script src="../js/components/icons.js"></script>
+<script src="../js/components/toast.js"></script>
+<script src="../js/components/modal.js"></script>
+<script src="../js/components/form-validation.js"></script>
+<script src="../js/services/api-service.js"></script>
+<script src="../js/services/auth-service.js"></script>
+<script src="../js/services/mock-data.js"></script>
+<script src="../js/services/admin-service.js"></script>
+<script src="../js/components/app-shell.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!CareSync.auth.requireAuth(['admin'])) return;
+  CareSync.appShell.init();
+
+  async function loadUsers() {
+    const q    = document.getElementById('user-search').value.trim();
+    const role = document.getElementById('user-role-filter').value;
+    const tbody = document.getElementById('users-tbody');
+    tbody.innerHTML = '<tr><td colspan="6"><div class="skeleton" style="height:36px"></div></td></tr>';
+    try {
+      const { users, total } = await CareSync.adminService.getUsers({ q, role });
+      document.getElementById('user-count').textContent = `${total} user${total!==1?'s':''} found`;
+      if (!users.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--color-text-muted)">No users found.</td></tr>'; return; }
+      const roleLabel = { patient:'<span class="badge badge-info">Patient</span>', facility:'<span class="badge badge-success">Facility</span>', admin:'<span class="badge" style="background:#EDE9FE;color:#5B21B6">Admin</span>' };
+      const statusLabel = { Active:'<span class="badge badge-success">Active</span>', Inactive:'<span class="badge" style="background:var(--color-background);color:var(--color-text-muted)">Inactive</span>', Pending:'<span class="badge badge-warning">Pending</span>' };
+      tbody.innerHTML = users.map(u => `
+        <tr>
+          <td><strong>${u.name}</strong></td>
+          <td class="td-muted">${u.email}</td>
+          <td>${roleLabel[u.role]||u.role}</td>
+          <td>${statusLabel[u.status]||u.status}</td>
+          <td class="td-muted">${u.joined}</td>
+          <td>
+            <button class="btn btn-secondary btn-sm" data-view-user='${JSON.stringify({name:u.name,email:u.email,role:u.role,phone:u.phone,status:u.status,joined:u.joined})}'>View</button>
+          </td>
+        </tr>`).join('');
+
+      tbody.querySelectorAll('[data-view-user]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const u = JSON.parse(btn.dataset.viewUser);
+          CareSync.modal.open({
+            title: u.name,
+            body: `<p><strong>Email:</strong> ${u.email}</p><p style="margin-top:8px"><strong>Phone:</strong> ${u.phone}</p><p style="margin-top:8px"><strong>Role:</strong> ${u.role}</p><p style="margin-top:8px"><strong>Status:</strong> ${u.status}</p><p style="margin-top:8px"><strong>Joined:</strong> ${u.joined}</p><p style="margin-top:var(--space-4);color:var(--color-text-muted);font-size:var(--fs-sm)">User management actions (suspend, promote, delete) are backend integration points.</p>`,
+            actions: [{ label: 'Close', variant: 'secondary' }]
+          });
+        });
+      });
+    } catch { tbody.innerHTML = '<tr><td colspan="6" style="color:var(--color-danger);padding:1rem">Error loading users.</td></tr>'; }
+  }
+
+  document.getElementById('btn-user-search').addEventListener('click', loadUsers);
+  document.getElementById('user-search').addEventListener('keydown', e => { if(e.key==='Enter') loadUsers(); });
+  loadUsers();
+});
+</script>
+</body>
+</html>

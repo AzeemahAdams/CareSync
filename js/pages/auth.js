@@ -105,6 +105,9 @@
           passEl.value
         );
 
+        // Store name for topbar display
+        try { sessionStorage.setItem('cr_name', result.user.name); } catch {}
+
         // Determine redirect
         const dest = next || CareSync.auth.getRoleRedirect(result.user.role);
         CareSync.toast.show('Welcome back, ' + result.user.name + '.', 'success');
@@ -220,6 +223,7 @@
         });
 
         showAlert(alertEl, 'Account created! Redirecting to your dashboard…', 'success');
+        try { sessionStorage.setItem('cr_name', result.user.name); } catch {}
         setTimeout(() => {
           window.location.href = CareSync.auth.getRoleRedirect(result.user.role);
         }, 1200);

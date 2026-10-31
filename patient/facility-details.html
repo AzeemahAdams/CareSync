@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <p class="text-secondary" style="font-size:var(--fs-sm)">This facility's information is <strong>${f.status.toLowerCase()}</strong>. Last updated: ${f.updatedAt}.</p>
           ${f.status!=='Verified' ? `<div class="note" style="margin-top:var(--space-3)">Unverified or pending information has not been confirmed by CareRoute administrators. Contact the facility directly to confirm details.</div>` : ''}
           <div style="margin-top:var(--space-4)">
-            <button class="btn btn-primary" onclick="CareSync.modal.open({title:'Request referral',body:'Referral requests are processed by your current healthcare provider. Please discuss this facility with your clinician. This demo does not create real referrals.',actions:[{label:'Understood',variant:'primary'}]})">Request referral</button>
+            <button class="btn btn-primary" onclick="CareSync.modal.open({title:'Request referral',body:'Referral requests are processed by your current healthcare provider. Please discuss this facility with your clinician to initiate a referral through CareRoute.',actions:[{label:'Understood',variant:'primary'}]})">Request referral</button>
           </div>
         </div>
       </div>`;

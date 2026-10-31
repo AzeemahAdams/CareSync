@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Facility Verification — CareRoute Admin</title>
+  <meta name="theme-color" content="#1E293B">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css"><link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css"><link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/patient.css"><link rel="stylesheet" href="../css/admin.css"><link rel="stylesheet" href="../css/facility.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="app-topbar">
+    <button class="sidebar-toggle" aria-label="Toggle sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <a class="topbar-logo" href="../index.html"><svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#3B82F6"/><path d="M8 14h4l2-4 3 8 2-4h1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Care<span>Route</span></a>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-actions"><span class="topbar-name"></span><div class="topbar-avatar" aria-hidden="true">A</div></div>
+  </header>
+  <div class="sidebar-overlay"></div>
+  <aside class="app-sidebar" aria-label="Admin navigation">
+    <p class="sidebar-section-label">Administration</p>
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="dashboard.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Overview</a></li>
+      <li class="sidebar-nav-item"><a href="users.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Users</a></li>
+      <li class="sidebar-nav-item"><a href="facilities.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Facilities</a></li>
+      <li class="sidebar-nav-item"><a href="verification.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg> Verification</a></li>
+      <li class="sidebar-nav-item"><a href="referrals.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m17 3 4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3"/></svg> Referrals</a></li>
+      <li class="sidebar-nav-item"><a href="reports.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Reports</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item danger"><button data-action="logout"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Log out</button></li>
+    </ul>
+  </aside>
+
+  <main class="app-main" id="main">
+    <div class="page-header"><h1>Facility Verification</h1><p>Review facility submissions and approve or reject their verification status.</p></div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn" role="tab" aria-selected="true" data-filter="Pending">Pending review</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-filter="Verified">Verified</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-filter="Unverified">Unverified</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-filter="all">All</button>
+    </div>
+
+    <div id="verification-list"></div>
+  </main>
+</div>
+
+<script src="../js/config/api-config.js"></script>
+<script src="../js/config/translations.js"></script>
+<script src="../js/components/icons.js"></script>
+<script src="../js/components/toast.js"></script>
+<script src="../js/components/modal.js"></script>
+<script src="../js/components/form-validation.js"></script>
+<script src="../js/services/api-service.js"></script>
+<script src="../js/services/auth-service.js"></script>
+<script src="../js/services/mock-data.js"></script>
+<script src="../js/services/admin-service.js"></script>
+<script src="../js/components/app-shell.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!CareSync.auth.requireAuth(['admin'])) return;
+  CareSync.appShell.init();
+
+  let allFacilities = [], activeFilter = 'Pending';
+
+  const sc = s => s==='Verified'?'badge-success':s==='Pending'?'badge-warning':'badge-danger';
+
+  function render() {
+    const list = document.getElementById('verification-list');
+    const visible = activeFilter === 'all' ? allFacilities : allFacilities.filter(f => f.status === activeFilter);
+    if (!visible.length) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-state-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg></div><h3>No facilities</h3><p>No facilities with status "${activeFilter}".</p></div>`;
+      return;
+    }
+    list.innerHTML = visible.map(f => `
+      <div class="verification-card" id="vc-${f.id}">
+        <div class="verification-card-header">
+          <div><h3 style="font-size:var(--fs-h3)">${f.name}</h3><p class="text-secondary">${f.type} · ${f.location}</p></div>
+          <span class="badge ${sc(f.status)}">${f.status}</span>
+        </div>
+        <div class="verification-meta">
+          <div class="verification-meta-item"><strong>Address</strong><span>${f.address}</span></div>
+          <div class="verification-meta-item"><strong>Phone</strong><span>${f.phone}</span></div>
+          <div class="verification-meta-item"><strong>Email</strong><span>${f.email}</span></div>
+          <div class="verification-meta-item"><strong>Last updated</strong><span>${f.updatedAt}</span></div>
+          <div class="verification-meta-item"><strong>Services</strong><span>${f.services.slice(0,3).join(', ')}${f.services.length>3?' +more':''}</span></div>
+          <div class="verification-meta-item"><strong>Accessibility</strong><span>${f.accessibility.join(', ')||'None recorded'}</span></div>
+        </div>
+        <div class="field" style="margin-bottom:var(--space-3)">
+          <label for="notes-${f.id}">Verification notes</label>
+          <textarea class="textarea verification-notes" id="notes-${f.id}" placeholder="Add internal notes about this review…" rows="2"></textarea>
+        </div>
+        <div class="verification-actions">
+          <button class="btn btn-primary" data-approve="${f.id}">✓ Approve</button>
+          <button class="btn btn-danger" data-reject="${f.id}">✗ Reject</button>
+        </div>
+      </div>`).join('');
+
+    list.querySelectorAll('[data-approve]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.approve;
+        const notes = document.getElementById('notes-' + id)?.value || '';
+        btn.disabled = true; btn.textContent = 'Approving…';
+        try {
+          await CareSync.adminService.verifyFacility(id, 'approve', notes);
+          const f = allFacilities.find(x => x.id === id);
+          if (f) f.status = 'Verified';
+          render();
+          CareSync.toast.show('Facility approved.', 'success');
+        } catch { CareSync.toast.show('Action failed.', 'error'); btn.disabled = false; btn.textContent = '✓ Approve'; }
+      });
+    });
+
+    list.querySelectorAll('[data-reject]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.reject;
+        const notes = document.getElementById('notes-' + id)?.value || '';
+        CareSync.modal.confirm('Reject facility', 'Mark this facility as Unverified?', async () => {
+          try {
+            await CareSync.adminService.verifyFacility(id, 'reject', notes);
+            const f = allFacilities.find(x => x.id === id);
+            if (f) f.status = 'Unverified';
+            render();
+            CareSync.toast.show('Facility rejected.', 'warning');
+          } catch { CareSync.toast.show('Action failed.', 'error'); }
+        });
+      });
+    });
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected','false'));
+      btn.setAttribute('aria-selected','true');
+      activeFilter = btn.dataset.filter;
+      render();
+    });
+  });
+
+  try {
+    const { facilities } = await CareSync.adminService.getFacilities({});
+    allFacilities = facilities;
+    render();
+  } catch { document.getElementById('verification-list').innerHTML = '<p class="text-secondary">Could not load facilities.</p>'; }
+});
+</script>
+</body>
+</html>

@@ -6,11 +6,11 @@ CareSync.layout = (() => {
 
     // ── Nav links ──────────────────────────────────────────────────────────
     const publicLinks = [
-      ['nav.home',    'index.html',           'Home'],
-      ['nav.about',   'about.html',           'About'],
-      ['nav.how',     'how-it-works.html',    'How It Works'],
-      ['nav.find',    'patient/find-care.html','Find Care'],
-      ['nav.contact', 'contact.html',         'Contact'],
+      ['nav.home',    'index.html',            'Home'],
+      ['nav.about',   'about.html',            'About'],
+      ['nav.how',     'how-it-works.html',     'How It Works'],
+      ['nav.find',    'find-care.html',        'Find Care'],
+      ['nav.contact', 'contact.html',          'Contact'],
     ];
 
     const li = links =>
@@ -47,7 +47,6 @@ CareSync.layout = (() => {
     const h = document.getElementById('site-header');
     if (h) h.outerHTML = `
 <a class="skip-link" href="#main" data-i18n="skip">Skip to main content</a>
-<div class="demo-label" data-i18n="demo.banner">Demo mode: all data shown is synthetic and not live.</div>
 <header class="site-header">
   <div class="container nav">
     <a class="logo" href="${b}index.html" aria-label="CareRoute home">
@@ -102,7 +101,7 @@ CareSync.layout = (() => {
       </div>
       <div>
         <h3 data-i18n="footer.product">Product</h3>
-        <a href="${b}patient/find-care.html" data-i18n="nav.find">Find Care</a>
+        <a href="${b}find-care.html" data-i18n="nav.find">Find Care</a>
         <a href="${b}how-it-works.html" data-i18n="nav.how">How It Works</a>
         <a href="${b}about.html" data-i18n="nav.about">About</a>
       </div>
@@ -114,9 +113,9 @@ CareSync.layout = (() => {
       </div>
       <div>
         <h3>Contact</h3>
-        <p>support@example.com <small>(placeholder)</small></p>
-        <p>+234 000 000 0000 <small>(placeholder)</small></p>
-        <p>Abeokuta, Nigeria <small>(placeholder)</small></p>
+        <p>support@careroute.ng</p>
+        <p>+234 800 CAR ROUTE</p>
+        <p>Abeokuta, Nigeria</p>
       </div>
     </div>
     <p class="footer-bottom">
@@ -130,8 +129,8 @@ CareSync.layout = (() => {
 
     // ── Legal modals ──────────────────────────────────────────────────────
     const LEGAL = {
-      privacy: ['Privacy policy',    'Placeholder text. A reviewed privacy policy must be supplied before launch. This demo does not collect or store personal health information.'],
-      terms:   ['Terms of service',  'Placeholder text. CareRoute is an information and navigation tool. It does not provide medical advice, diagnosis, or emergency dispatch.']
+      privacy: ['Privacy policy',   'CareRoute collects only the information necessary to provide healthcare navigation services. We do not store personal health records. Full privacy policy available on request.'],
+      terms:   ['Terms of service', 'CareRoute is an information and navigation tool. It does not provide medical advice, diagnosis, or emergency dispatch services. Use of this platform does not replace consultation with a qualified healthcare professional.']
     };
     document.querySelectorAll('[data-legal]').forEach(btn =>
       btn.addEventListener('click', () =>

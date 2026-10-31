@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Offline — CareRoute</title>
+  <meta name="theme-color" content="#1E293B">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&family=Manrope:wght@800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <style>
+    body { font-family: var(--font-body, 'DM Sans', sans-serif); background: #F1F5F9; display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 1rem; }
+    .card { background: #fff; border-radius: 16px; padding: 3rem 2rem; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 4px 24px rgba(15,23,42,.08); }
+    h1 { font-family: 'Manrope', sans-serif; font-size: 1.75rem; color: #0F172A; margin-bottom: .75rem; }
+    p { color: #64748B; line-height: 1.6; margin-bottom: 1.5rem; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; background: #3B82F6; color: #fff; border: 0; border-radius: 10px; padding: 0 1.5rem; min-height: 44px; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .icon { width: 64px; height: 64px; border-radius: 50%; background: #EFF6FF; display: grid; place-items: center; margin: 0 auto 1.5rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 6s4-2 11-2 11 2 11 2"/><path d="M1 12s4-2 11-2 11 2 11 2"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+    </div>
+    <h1>You're offline</h1>
+    <p>CareRoute needs a connection to load live data. Check your internet connection and try again.</p>
+    <p style="font-size:.875rem;color:#94A3B8">In an emergency, call <strong>112</strong> (Nigeria) or your local emergency number.</p>
+    <a class="btn" href="/" onclick="location.reload()">Try again</a>
+  </div>
+</body>
+</html>

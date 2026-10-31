@@ -15,7 +15,7 @@
       e.preventDefault();
       if (!CareSync.forms.validate(form)) return;
       var q = new URLSearchParams(new FormData(form)).toString();
-      location.href = 'patient/find-care.html?' + q;
+      location.href = 'find-care.html?' + q;
     });
   }
 

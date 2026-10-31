@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find Healthcare — CareRoute</title>
+<meta name="description" content="Search for healthcare facilities by location, service, and facility type across Nigeria.">
+<meta name="theme-color" content="#1E293B">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/landing.css">
+<link rel="stylesheet" href="css/patient.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  .find-care-page { padding-block: var(--space-7); }
+  .find-care-header { margin-bottom: var(--space-6); }
+  .find-care-header h1 { font-size: clamp(1.75rem, 1.3rem + 2vw, 2.5rem); margin-bottom: var(--space-3); }
+  .find-care-header p  { color: var(--color-text-secondary); font-size: var(--fs-lg); max-width: 56ch; }
+  .results-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-4); flex-wrap: wrap; }
+  .public-map-container { height: 480px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); overflow: hidden; position: relative; }
+  .public-map-container svg { max-width: none; max-height: none; }
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+<main id="main" class="find-care-page">
+  <div class="container">
+
+    <div class="find-care-header">
+      <h1>Find Healthcare</h1>
+      <p>Search for verified healthcare facilities by location, service, or facility type.</p>
+    </div>
+
+    <!-- Search & filter bar -->
+    <div class="search-filter-bar" style="margin-bottom:var(--space-5)">
+      <div class="search-filter-row">
+        <div class="search-input-wrap" style="flex:2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input class="input" id="search-q" type="search" placeholder="Facility name or location, e.g. Ikeja…" aria-label="Search facilities">
+        </div>
+        <div class="filter-group">
+          <select class="select filter-select" id="filter-service" aria-label="Healthcare service">
+            <option value="">Any service</option>
+            <option>General consultation</option>
+            <option>Emergency care</option>
+            <option>Maternal health</option>
+            <option>Paediatrics</option>
+            <option>Surgery</option>
+            <option>Dental care</option>
+            <option>Eye care</option>
+            <option>Laboratory</option>
+            <option>Pharmacy</option>
+            <option>Radiology</option>
+            <option>Immunisation</option>
+          </select>
+          <select class="select filter-select" id="filter-type" aria-label="Facility type">
+            <option value="">Any type</option>
+            <option>Teaching Hospital</option>
+            <option>General Hospital</option>
+            <option>Private Hospital</option>
+            <option>Primary Health Centre</option>
+            <option>Clinic</option>
+          </select>
+          <select class="select filter-select" id="filter-sort" aria-label="Sort results">
+            <option value="relevance">Relevance</option>
+            <option value="distance">Distance</option>
+            <option value="name">Name A–Z</option>
+          </select>
+          <button class="btn btn-primary" id="btn-search">Search</button>
+          <button class="btn btn-secondary" id="btn-clear" title="Clear filters">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results header row -->
+    <div class="results-bar">
+      <p id="results-summary" class="text-secondary" style="font-size:var(--fs-sm)"></p>
+      <div class="view-toggle" role="group" aria-label="View mode">
+        <button class="view-toggle-btn active" id="btn-list" aria-label="List view" title="List view">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </button>
+        <button class="view-toggle-btn" id="btn-map" aria-label="Map view" title="Map view">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- List view -->
+    <div id="list-view">
+      <div class="facility-grid" id="facility-results"></div>
+      <div id="pagination-wrap"></div>
+    </div>
+
+    <!-- Map view -->
+    <div id="map-view" style="display:none">
+      <div class="public-map-container" id="public-find-map"></div>
+    </div>
+
+  </div>
+</main>
+<div id="site-footer"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/config/api-config.js"></script>
+<script src="js/config/translations.js"></script>
+<script src="js/components/icons.js"></script>
+<script src="js/components/toast.js"></script>
+<script src="js/components/modal.js"></script>
+<script src="js/components/layout.js"></script>
+<script src="js/components/language-switcher.js"></script>
+<script src="js/components/navigation.js"></script>
+<script src="js/components/form-validation.js"></script>
+<script src="js/services/api-service.js"></script>
+<script src="js/services/auth-service.js"></script>
+<script src="js/services/mock-data.js"></script>
+<script src="js/services/facility-service.js"></script>
+<script src="js/main.js"></script>
+<script>
+(function () {
+  const PAGE_SIZE = 6;
+  let allResults = [], currentPage = 1, mapInstance = null;
+
+  const statusClass = s => s === 'Verified' ? 'badge-success' : s === 'Pending' ? 'badge-warning' : 'badge-danger';
+
+  function renderCard(f) {
+    return `<div class="facility-card">
+      <div class="facility-card-header">
+        <div>
+          <div class="facility-card-name">${f.name}</div>
+          <div class="facility-card-type">${f.type}</div>
+        </div>
+        <span class="badge ${statusClass(f.status)}">${f.status}</span>
+      </div>
+      <div class="facility-card-meta">
+        <div class="facility-meta-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          ${f.location}
+        </div>
+        <div class="facility-meta-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+          <a href="tel:${f.phone}" style="color:var(--color-primary)">${f.phone}</a>
+        </div>
+        <div class="facility-meta-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          ${f.hours} &nbsp;&middot;&nbsp; ${f.distance} km away
+        </div>
+      </div>
+      <div class="facility-card-tags">
+        ${f.services.slice(0, 4).map(s => `<span class="tag">${s}</span>`).join('')}
+        ${f.services.length > 4 ? `<span class="tag">+${f.services.length - 4} more</span>` : ''}
+      </div>
+      <div class="facility-card-footer">
+        <span class="text-secondary" style="font-size:var(--fs-sm)">Updated ${f.updatedAt}</span>
+        <a href="auth/login.html" class="btn btn-primary btn-sm">View details</a>
+      </div>
+    </div>`;
+  }
+
+  function renderList() {
+    const container = document.getElementById('facility-results');
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const page  = allResults.slice(start, start + PAGE_SIZE);
+
+    if (!page.length) {
+      container.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-state-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
+        <h3>No facilities found</h3>
+        <p>Try adjusting your search terms or removing some filters.</p>
+      </div>`;
+      document.getElementById('pagination-wrap').innerHTML = '';
+      return;
+    }
+
+    container.innerHTML = page.map(renderCard).join('');
+    renderPagination();
+  }
+
+  function renderPagination() {
+    const total = Math.ceil(allResults.length / PAGE_SIZE);
+    if (total <= 1) { document.getElementById('pagination-wrap').innerHTML = ''; return; }
+    let btns = `<button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} id="pg-prev" aria-label="Previous page">&lsaquo;</button>`;
+    for (let i = 1; i <= total; i++) {
+      btns += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" data-page="${i}" aria-label="Page ${i}" aria-current="${i === currentPage ? 'true' : 'false'}">${i}</button>`;
+    }
+    btns += `<button class="pagination-btn" ${currentPage === total ? 'disabled' : ''} id="pg-next" aria-label="Next page">&rsaquo;</button>`;
+    const wrap = document.getElementById('pagination-wrap');
+    wrap.innerHTML = `<div class="pagination" role="navigation" aria-label="Page navigation">${btns}</div>`;
+    wrap.querySelectorAll('[data-page]').forEach(b => b.addEventListener('click', () => { currentPage = parseInt(b.dataset.page); renderList(); window.scrollTo({top: 0, behavior:'smooth'}); }));
+    document.getElementById('pg-prev')?.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderList(); } });
+    document.getElementById('pg-next')?.addEventListener('click', () => { if (currentPage < total) { currentPage++; renderList(); } });
+  }
+
+  async function doSearch() {
+    const container = document.getElementById('facility-results');
+    container.innerHTML = '<div style="grid-column:1/-1"><div class="skeleton" style="height:180px;margin-bottom:12px"></div><div class="skeleton" style="height:180px"></div></div>';
+    try {
+      const { results, total } = await CareSync.facilityService.search({
+        q:       document.getElementById('search-q').value.trim(),
+        service: document.getElementById('filter-service').value,
+        type:    document.getElementById('filter-type').value,
+        sort:    document.getElementById('filter-sort').value,
+      });
+      allResults = results;
+      currentPage = 1;
+      const word = total === 1 ? 'facility' : 'facilities';
+      document.getElementById('results-summary').textContent = `${total} ${word} found`;
+      renderList();
+      if (mapInstance) updateMapMarkers(results);
+    } catch (e) {
+      container.innerHTML = `<p class="text-secondary" style="grid-column:1/-1">Unable to load results. Please try again.</p>`;
+    }
+  }
+
+  function initMap(facilities) {
+    if (mapInstance) { updateMapMarkers(facilities); return; }
+    const el = document.getElementById('public-find-map');
+    if (!el) return;
+    mapInstance = L.map(el, { scrollWheelZoom: false }).setView([6.5244, 3.3792], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(mapInstance);
+    updateMapMarkers(facilities);
+    setTimeout(() => mapInstance.invalidateSize(), 300);
+  }
+
+  function updateMapMarkers(facilities) {
+    if (!mapInstance) return;
+    mapInstance.eachLayer(l => { if (l instanceof L.Marker) mapInstance.removeLayer(l); });
+    const markers = facilities.map(f => {
+      const colour = f.status === 'Verified' ? '#16A34A' : '#D97706';
+      const icon = L.divIcon({
+        className: '',
+        html: `<div style="background:${colour};width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>`,
+        iconSize: [14, 14], iconAnchor: [7, 7]
+      });
+      return L.marker([f.lat, f.lng], { icon })
+        .addTo(mapInstance)
+        .bindPopup(`<strong>${f.name}</strong><br>${f.type}<br><a href="auth/login.html">View details &rarr;</a>`);
+    });
+    if (markers.length) mapInstance.fitBounds(L.featureGroup(markers).getBounds().pad(0.2));
+  }
+
+  // View toggle
+  document.getElementById('btn-list').addEventListener('click', () => {
+    document.getElementById('list-view').style.display = '';
+    document.getElementById('map-view').style.display  = 'none';
+    document.getElementById('btn-list').classList.add('active');
+    document.getElementById('btn-map').classList.remove('active');
+  });
+
+  document.getElementById('btn-map').addEventListener('click', () => {
+    document.getElementById('list-view').style.display = 'none';
+    document.getElementById('map-view').style.display  = '';
+    document.getElementById('btn-map').classList.add('active');
+    document.getElementById('btn-list').classList.remove('active');
+    initMap(allResults);
+  });
+
+  document.getElementById('btn-search').addEventListener('click', doSearch);
+  document.getElementById('search-q').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    document.getElementById('search-q').value        = '';
+    document.getElementById('filter-service').value  = '';
+    document.getElementById('filter-type').value     = '';
+    document.getElementById('filter-sort').value     = 'relevance';
+    doSearch();
+  });
+
+  // Honour URL params from the landing page hero search
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('location')) document.getElementById('search-q').value       = params.get('location');
+    if (params.get('service'))  document.getElementById('filter-service').value = params.get('service');
+    if (params.get('type'))     document.getElementById('filter-type').value    = params.get('type');
+    doSearch();
+  });
+}());
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Services — CareRoute Facility</title>
+  <meta name="theme-color" content="#1E293B">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css"><link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css"><link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/patient.css"><link rel="stylesheet" href="../css/facility.css"><link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="role-facility">
+<div class="app-shell">
+  <header class="app-topbar">
+    <button class="sidebar-toggle" aria-label="Toggle sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <a class="topbar-logo" href="../index.html"><svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#3B82F6"/><path d="M8 14h4l2-4 3 8 2-4h1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Care<span>Route</span></a>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-actions"><span class="topbar-name"></span><div class="topbar-avatar" aria-hidden="true">F</div></div>
+  </header>
+  <div class="sidebar-overlay"></div>
+  <aside class="app-sidebar" aria-label="Facility navigation">
+    <p class="sidebar-section-label">Facility</p>
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="dashboard.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Overview</a></li>
+      <li class="sidebar-nav-item"><a href="profile.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Facility Profile</a></li>
+      <li class="sidebar-nav-item"><a href="services.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 12 2 2 4-4"/></svg> Services</a></li>
+      <li class="sidebar-nav-item"><a href="referrals.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m17 3 4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3"/></svg> Referrals</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item danger"><button data-action="logout"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Log out</button></li>
+    </ul>
+  </aside>
+
+  <main class="app-main" id="main">
+    <div class="page-header-row page-header">
+      <div><h1>Services</h1><p>Manage the healthcare services your facility offers.</p></div>
+      <button class="btn btn-primary" id="add-service-btn">+ Add service</button>
+    </div>
+
+    <!-- Add service form (hidden) -->
+    <div class="section-card" id="add-service-panel" style="display:none;margin-bottom:var(--space-5)">
+      <div class="section-card-header"><h2>New service</h2></div>
+      <div class="section-card-body">
+        <form id="add-service-form" novalidate>
+          <div class="profile-grid" style="margin-bottom:var(--space-4)">
+            <div class="field"><label for="svc-name">Service name</label><input class="input" id="svc-name" name="name" data-label="Service name" required placeholder="e.g. Dental care"></div>
+            <div class="field"><label for="svc-desc">Description</label><input class="input" id="svc-desc" name="description" placeholder="Brief description (optional)"></div>
+          </div>
+          <div style="display:flex;gap:var(--space-3)">
+            <button type="submit" class="btn btn-primary">Add service</button>
+            <button type="button" class="btn btn-secondary" id="cancel-add-service">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Services list -->
+    <div class="section-card">
+      <div class="section-card-header"><h2>Listed services</h2><span id="service-count" class="badge badge-info">0 services</span></div>
+      <div class="section-card-body">
+        <div class="services-list" id="services-list"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="../js/config/api-config.js"></script>
+<script src="../js/config/translations.js"></script>
+<script src="../js/components/icons.js"></script>
+<script src="../js/components/toast.js"></script>
+<script src="../js/components/modal.js"></script>
+<script src="../js/components/form-validation.js"></script>
+<script src="../js/services/api-service.js"></script>
+<script src="../js/services/auth-service.js"></script>
+<script src="../js/services/mock-data.js"></script>
+<script src="../js/services/facility-service.js"></script>
+<script src="../js/components/app-shell.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!CareSync.auth.requireAuth(['facility'])) return;
+  CareSync.appShell.init();
+
+  let services = [];
+
+  function renderServices() {
+    const list = document.getElementById('services-list');
+    document.getElementById('service-count').textContent = services.length + ' service' + (services.length !== 1 ? 's' : '');
+    if (!services.length) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-state-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div><h3>No services yet</h3><p>Add your first service using the button above.</p></div>`;
+      return;
+    }
+    list.innerHTML = services.map(s => `
+      <div class="service-item">
+        <div class="service-item-info">
+          <div class="service-item-name">${s.name}</div>
+          <div class="service-item-desc">${s.description || 'No description provided'}</div>
+        </div>
+        <div class="service-item-actions">
+          <button class="btn btn-secondary btn-sm" data-edit-id="${s.id}">Edit</button>
+          <button class="btn btn-danger btn-sm" data-remove-id="${s.id}">Remove</button>
+        </div>
+      </div>`).join('');
+
+    list.querySelectorAll('[data-remove-id]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.removeId;
+        const svc = services.find(s => s.id === id);
+        CareSync.modal.confirm('Remove service', `Remove "${svc?.name}" from your services list?`, async () => {
+          try {
+            await CareSync.facilityService.removeService(id);
+            services = services.filter(s => s.id !== id);
+            renderServices();
+            CareSync.toast.show('Service removed.', 'success');
+          } catch { CareSync.toast.show('Failed to remove service.', 'error'); }
+        });
+      });
+    });
+
+    list.querySelectorAll('[data-edit-id]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const svc = services.find(s => s.id === btn.dataset.editId);
+        CareSync.modal.open({
+          title: 'Edit service',
+          body: `<p class="text-secondary" style="font-size:var(--fs-sm)">Editing services via modal is a backend integration point. In the live product this would update the service record. Current name: <strong>${svc?.name}</strong>.</p>`,
+          actions: [{ label: 'Close', variant: 'secondary' }]
+        });
+      });
+    });
+  }
+
+  // Load
+  try {
+    const profile = await CareSync.facilityService.getMyProfile();
+    services = profile.services || [];
+    renderServices();
+  } catch { document.getElementById('services-list').innerHTML = '<p class="text-secondary">Could not load services.</p>'; }
+
+  // Add panel toggle
+  document.getElementById('add-service-btn').addEventListener('click', () => {
+    const panel = document.getElementById('add-service-panel');
+    panel.style.display = panel.style.display === 'none' ? '' : 'none';
+  });
+  document.getElementById('cancel-add-service').addEventListener('click', () => {
+    document.getElementById('add-service-panel').style.display = 'none';
+    document.getElementById('add-service-form').reset();
+  });
+
+  // Add service submit
+  document.getElementById('add-service-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!CareSync.forms.validate(e.target)) return;
+    const btn = e.target.querySelector('[type=submit]');
+    btn.disabled = true; btn.textContent = 'Adding…';
+    try {
+      const svc = await CareSync.facilityService.addService({
+        name: document.getElementById('svc-name').value.trim(),
+        description: document.getElementById('svc-desc').value.trim(),
+        available: true
+      });
+      services.push(svc);
+      renderServices();
+      document.getElementById('add-service-panel').style.display = 'none';
+      e.target.reset();
+      CareSync.toast.show('Service added.', 'success');
+    } catch(err) { CareSync.toast.show(err.message || 'Failed to add service.', 'error'); }
+    finally { btn.disabled = false; btn.textContent = 'Add service'; }
+  });
+});
+</script>
+</body>
+</html>

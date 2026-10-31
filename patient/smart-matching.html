@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Matching — CareRoute</title>
+  <meta name="theme-color" content="#1E293B">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css"><link rel="stylesheet" href="../css/reset.css"><link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css"><link rel="stylesheet" href="../css/patient.css"><link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="app-topbar">
+    <button class="sidebar-toggle" aria-label="Toggle sidebar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <a class="topbar-logo" href="../index.html"><svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#3B82F6"/><path d="M8 14h4l2-4 3 8 2-4h1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Care<span>Route</span></a>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-actions"><span class="topbar-name"></span><div class="topbar-avatar" aria-hidden="true">A</div></div>
+  </header>
+  <div class="sidebar-overlay"></div>
+  <aside class="app-sidebar" aria-label="Patient navigation">
+    <p class="sidebar-section-label">Patient</p>
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="dashboard.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Overview</a></li>
+      <li class="sidebar-nav-item"><a href="find-care.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> Find Healthcare</a></li>
+      <li class="sidebar-nav-item"><a href="smart-matching.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg> Smart Matching</a></li>
+      <li class="sidebar-nav-item"><a href="emergency.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg> Emergency</a></li>
+      <li class="sidebar-nav-item"><a href="referrals.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m17 3 4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3"/></svg> My Referrals</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="profile.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile</a></li>
+      <li class="sidebar-nav-item danger"><button data-action="logout"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Log out</button></li>
+    </ul>
+  </aside>
+
+  <main class="app-main" id="main">
+    <div class="page-header">
+      <h1>Smart Facility Matching</h1>
+      <p>Tell us what you need. We'll score and rank facilities for you — transparently.</p>
+    </div>
+
+    <div class="note" style="margin-bottom:var(--space-5)">
+      <strong>Important:</strong> Match scores are calculated using CareRoute's facility data. Scores are a navigation aid — always confirm details directly with the facility and consult a qualified healthcare professional.
+    </div>
+
+    <div style="display:grid;grid-template-columns:340px 1fr;gap:var(--space-5);align-items:start" id="matching-layout">
+
+      <!-- Preferences form -->
+      <div class="section-card" style="position:sticky;top:80px">
+        <div class="section-card-header"><h2>Your preferences</h2></div>
+        <div class="section-card-body">
+          <form id="matching-form" class="auth-form" novalidate>
+            <div class="field">
+              <label for="m-service">Healthcare service needed</label>
+              <select class="select" id="m-service" name="service">
+                <option value="">Any service</option>
+                <option>General consultation</option><option>Emergency care</option>
+                <option>Maternal health</option><option>Paediatrics</option>
+                <option>Surgery</option><option>Dental care</option>
+                <option>Eye care</option><option>Laboratory</option>
+                <option>Radiology</option><option>Immunisation</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="m-distance">Max distance (km)</label>
+              <select class="select" id="m-distance" name="maxDistance">
+                <option value="5">Within 5 km</option>
+                <option value="10" selected>Within 10 km</option>
+                <option value="20">Within 20 km</option>
+                <option value="50">Within 50 km</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="m-type">Preferred facility type</label>
+              <select class="select" id="m-type" name="facilityType">
+                <option value="">No preference</option>
+                <option>Teaching Hospital</option><option>General Hospital</option>
+                <option>Private Hospital</option><option>Primary Health Centre</option><option>Clinic</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Accessibility needs</label>
+              <div style="display:grid;gap:var(--space-2);margin-top:var(--space-1)">
+                <label class="checkbox-group"><input type="checkbox" name="accessibility" value="Wheelchair ramp"> Wheelchair ramp</label>
+                <label class="checkbox-group"><input type="checkbox" name="accessibility" value="Lifts"> Lifts / elevator</label>
+                <label class="checkbox-group"><input type="checkbox" name="accessibility" value="Accessible toilets"> Accessible toilets</label>
+                <label class="checkbox-group"><input type="checkbox" name="accessibility" value="Tactile paving"> Tactile paving</label>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%">Find best matches</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div id="match-results">
+        <div class="empty-state">
+          <div class="empty-state-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></div>
+          <h3>Set your preferences</h3>
+          <p>Fill in the form and click "Find best matches" to see personalised results.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="../js/config/api-config.js"></script>
+<script src="../js/config/translations.js"></script>
+<script src="../js/components/icons.js"></script>
+<script src="../js/components/toast.js"></script>
+<script src="../js/components/modal.js"></script>
+<script src="../js/components/form-validation.js"></script>
+<script src="../js/services/api-service.js"></script>
+<script src="../js/services/auth-service.js"></script>
+<script src="../js/services/mock-data.js"></script>
+<script src="../js/services/facility-service.js"></script>
+<script src="../js/components/app-shell.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (!CareSync.auth.requireAuth(['patient'])) return;
+  CareSync.appShell.init();
+
+  // Responsive layout
+  function fixLayout(){
+    const layout = document.getElementById('matching-layout');
+    if(window.innerWidth < 900) layout.style.gridTemplateColumns='1fr';
+    else layout.style.gridTemplateColumns='340px 1fr';
+  }
+  fixLayout(); window.addEventListener('resize', fixLayout);
+
+  document.getElementById('matching-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const form = e.target;
+    const btn  = form.querySelector('button[type=submit]');
+    btn.disabled = true; btn.textContent = 'Matching…';
+
+    const prefs = {
+      service:       form.querySelector('#m-service').value,
+      maxDistance:   form.querySelector('#m-distance').value,
+      facilityType:  form.querySelector('#m-type').value,
+      accessibility: [...form.querySelectorAll('input[name=accessibility]:checked')].map(c=>c.value),
+    };
+
+    const resultsEl = document.getElementById('match-results');
+    resultsEl.innerHTML = '<div class="skeleton" style="height:180px;margin-bottom:12px"></div><div class="skeleton" style="height:180px;margin-bottom:12px"></div><div class="skeleton" style="height:180px"></div>';
+
+    await new Promise(r=>setTimeout(r,600));
+
+    const facilities = CareSync.mockData.FACILITIES;
+    const scored = facilities.map(f => {
+      const result = CareSync.facilityService.computeMatch(f, prefs);
+      return { ...f, matchResult: result };
+    }).filter(f => f.distance <= parseFloat(prefs.maxDistance))
+      .sort((a,b) => b.matchResult.total - a.matchResult.total);
+
+    btn.disabled = false; btn.textContent = 'Find best matches';
+
+    if (!scored.length) {
+      resultsEl.innerHTML = `<div class="empty-state"><div class="empty-state-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div><h3>No matches found</h3><p>Try increasing the distance or removing some filters.</p></div>`;
+      return;
+    }
+
+    const scoreClass = s => s>=75?'high':s>=50?'medium':'low';
+
+    resultsEl.innerHTML = scored.map((f,i) => {
+      const bd = f.matchResult.breakdown;
+      const bars = [
+        {label:'Service match',  pct: bd.service},
+        {label:'Distance',       pct: bd.distance},
+        {label:'Accessibility',  pct: bd.accessibility},
+        {label:'Verification',   pct: bd.verification},
+        {label:'Info freshness', pct: bd.freshness},
+      ];
+      return `<div class="section-card" style="margin-bottom:var(--space-4)">
+        <div class="section-card-header">
+          <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
+            <span style="background:var(--color-background);border:1px solid var(--color-border);border-radius:50%;width:32px;height:32px;display:grid;place-items:center;font-weight:800;font-size:var(--fs-sm);flex-shrink:0">${i+1}</span>
+            <div><div style="font-weight:700;color:var(--color-text)">${f.name}</div><div style="font-size:var(--fs-sm);color:var(--color-text-secondary)">${f.type} · ${f.distance} km</div></div>
+          </div>
+          <span class="match-score ${scoreClass(f.matchResult.total)}">${f.matchResult.total}% match</span>
+        </div>
+        <div class="section-card-body">
+          <div style="margin-bottom:var(--space-4)">
+            ${bars.map(b=>`<div class="match-bar-row"><span class="match-bar-label">${b.label}</span><div class="match-bar-track"><div class="match-bar-fill" style="width:${b.pct}%"></div></div><span class="match-bar-value">${b.pct}%</span></div>`).join('')}
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap;padding-top:var(--space-3);border-top:1px solid var(--color-border)">
+            <span class="badge ${f.status==='Verified'?'badge-success':f.status==='Pending'?'badge-warning':'badge-danger'}">${f.status}</span>
+            <span class="text-secondary" style="font-size:var(--fs-sm)">${f.location}</span>
+            <span class="text-secondary" style="font-size:var(--fs-sm)">${f.phone}</span>
+            <a href="facility-details.html?id=${f.id}" class="btn btn-primary btn-sm" style="margin-left:auto">View details</a>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  });
+});
+</script>
+</body>
+</html>
