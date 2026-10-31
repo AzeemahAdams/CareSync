@@ -1,20 +1,22 @@
 // js/services/auth-service.js
 // Handles login, registration, logout, and session state.
-// Set CareSync.config.USE_MOCK = false to switch to a real backend.
+//
+// BACKEND INTEGRATION:
+//   Set CareSync.config.USE_MOCK = false in api-config.js.
+//   The login / register / logout functions will call the real API
+//   endpoints defined in CareSync.config.ENDPOINTS.
 
 CareSync.auth = (() => {
   'use strict';
 
-  // ── Mock data (demo only) ─────────────────────────────────────────────────
-  // Replace with live backend calls by setting USE_MOCK = false.
-
+  // ── Placeholder credentials used while USE_MOCK = true ───────────────────
+  // These are removed or replaced when the real backend is connected.
   const MOCK_USERS = [
-    { id: 'u1', name: 'Amara Okafor',    email: 'patient@demo.com',  password: 'Demo1234!', role: 'patient',  phone: '+234 801 234 5678' },
-    { id: 'u2', name: 'Lagos General',   email: 'facility@demo.com', password: 'Demo1234!', role: 'facility', phone: '+234 802 345 6789' },
-    { id: 'u3', name: 'Admin User',      email: 'admin@demo.com',    password: 'Demo1234!', role: 'admin',    phone: '+234 803 456 7890' },
+    { id: 'u1', name: 'Amara Okafor',     email: 'patient@careroute.ng',  password: 'CareRoute1!', role: 'patient',  phone: '+234 801 234 5678' },
+    { id: 'u2', name: 'Lagos General',    email: 'facility@careroute.ng', password: 'CareRoute1!', role: 'facility', phone: '+234 802 345 6789' },
+    { id: 'u3', name: 'Admin User',       email: 'admin@careroute.ng',    password: 'CareRoute1!', role: 'admin',    phone: '+234 803 456 7890' },
   ];
 
-  // Simulate network latency
   function _delay(ms = 600) { return new Promise(r => setTimeout(r, ms)); }
 
   function _mockLogin(email, password) {
@@ -22,7 +24,7 @@ CareSync.auth = (() => {
       u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
     );
     if (!user) throw { type: 'auth', message: 'Incorrect email or password. Please try again.' };
-    const token = 'mock_token_' + user.id + '_' + Date.now();
+    const token = 'session_' + user.id + '_' + Date.now();
     return { token, user: { id: user.id, name: user.name, email: user.email, role: user.role, phone: user.phone } };
   }
 
@@ -38,11 +40,12 @@ CareSync.auth = (() => {
       phone:    data.phone || ''
     };
     MOCK_USERS.push(newUser);
-    const token = 'mock_token_' + newUser.id + '_' + Date.now();
+    const token = 'session_' + newUser.id + '_' + Date.now();
     return { token, user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role } };
   }
 
   // ── Session helpers ───────────────────────────────────────────────────────
+
   function getSession() {
     const token = CareSync.api.getToken();
     const role  = CareSync.api.getRole();
@@ -61,7 +64,6 @@ CareSync.auth = (() => {
     }
   }
 
-  // Work out relative base path from current page location
   function _baseDir() {
     const depth = (window.location.pathname.match(/\//g) || []).length - 1;
     return depth > 1 ? '../' : '';
@@ -77,7 +79,7 @@ CareSync.auth = (() => {
       CareSync.api.setRole(result.user.role);
       return result;
     }
-    // Integration point ↓
+    // Live backend ↓
     const result = await CareSync.api.post(CareSync.config.ENDPOINTS.login, { email, password });
     CareSync.api.setToken(result.token);
     CareSync.api.setRole(result.user.role);
@@ -92,7 +94,7 @@ CareSync.auth = (() => {
       CareSync.api.setRole(result.user.role);
       return result;
     }
-    // Integration point ↓
+    // Live backend ↓
     const result = await CareSync.api.post(CareSync.config.ENDPOINTS.register, data);
     CareSync.api.setToken(result.token);
     CareSync.api.setRole(result.user.role);
@@ -106,8 +108,8 @@ CareSync.auth = (() => {
     CareSync.api.clearToken();
   }
 
-  // ── Guard for protected pages ─────────────────────────────────────────────
-  // Call on each protected page to redirect unauthenticated users.
+  // ── Route guard ───────────────────────────────────────────────────────────
+  // Call at the top of every protected page.
   function requireAuth(allowedRoles) {
     const session = getSession();
     if (!session) {

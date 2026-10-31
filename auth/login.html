@@ -85,7 +85,18 @@
         <p>Log in to your CareRoute account to continue.</p>
       </div>
 
-      <!-- Form-level alert -->
+      <!-- Test credentials hint — remove once real auth backend is live -->
+      <div class="auth-demo-note" role="note" style="margin-bottom:var(--space-4)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div style="font-size:var(--fs-sm)">
+          <strong>Test accounts:</strong><br>
+          Patient: <code>patient@careroute.ng</code> &nbsp;&middot;&nbsp;
+          Facility: <code>facility@careroute.ng</code> &nbsp;&middot;&nbsp;
+          Admin: <code>admin@careroute.ng</code><br>
+          Password for all: <code>CareRoute1!</code>
+        </div>
+      </div>
+
       <div id="login-alert" class="auth-alert" hidden aria-live="polite">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
         <span class="alert-msg"></span>

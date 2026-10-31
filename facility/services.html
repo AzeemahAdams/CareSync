@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const svc = services.find(s => s.id === btn.dataset.editId);
         CareSync.modal.open({
           title: 'Edit service',
-          body: `<p class="text-secondary" style="font-size:var(--fs-sm)">Editing services via modal is a backend integration point. In the live product this would update the service record. Current name: <strong>${svc?.name}</strong>.</p>`,
+          body: `<p><strong>${svc?.name}</strong></p><p style="margin-top:8px;color:var(--color-text-secondary);font-size:var(--fs-sm)">Full service editing — including renaming and updating descriptions — will be available once the backend is connected.</p>`,
           actions: [{ label: 'Close', variant: 'secondary' }]
         });
       });
