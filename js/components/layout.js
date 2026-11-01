@@ -54,7 +54,7 @@ CareSync.layout = (() => {
         <rect width="28" height="28" rx="8" fill="#3B82F6"/>
         <path d="M8 14h4l2-4 3 8 2-4h1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      Care<span>Route</span>
+      Care<span>Sync</span>
     </a>
     <nav class="nav-menu" aria-label="Main">${li(publicLinks)}</nav>
     <div class="nav-actions">
@@ -96,7 +96,7 @@ CareSync.layout = (() => {
   <div class="container">
     <div class="footer-grid">
       <div>
-        <p class="logo">Care<span>Route</span></p>
+        <p class="logo">Care<span>Sync</span></p>
         <p>Healthcare access, navigation and referral coordination. Not a diagnosis tool or emergency dispatch service.</p>
       </div>
       <div>
