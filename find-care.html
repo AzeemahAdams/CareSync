@@ -260,37 +260,39 @@
   }
 
   // View toggle
-  document.getElementById('btn-list').addEventListener('click', () => {
-    document.getElementById('list-view').style.display = '';
-    document.getElementById('map-view').style.display  = 'none';
-    document.getElementById('btn-list').classList.add('active');
-    document.getElementById('btn-map').classList.remove('active');
-  });
-
-  document.getElementById('btn-map').addEventListener('click', () => {
-    document.getElementById('list-view').style.display = 'none';
-    document.getElementById('map-view').style.display  = '';
-    document.getElementById('btn-map').classList.add('active');
-    document.getElementById('btn-list').classList.remove('active');
-    initMap(allResults);
-  });
-
-  document.getElementById('btn-search').addEventListener('click', doSearch);
-  document.getElementById('search-q').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
-  document.getElementById('btn-clear').addEventListener('click', () => {
-    document.getElementById('search-q').value        = '';
-    document.getElementById('filter-service').value  = '';
-    document.getElementById('filter-type').value     = '';
-    document.getElementById('filter-sort').value     = 'relevance';
-    doSearch();
-  });
-
   // Honour URL params from the landing page hero search
   document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('location')) document.getElementById('search-q').value       = params.get('location');
     if (params.get('service'))  document.getElementById('filter-service').value = params.get('service');
     if (params.get('type'))     document.getElementById('filter-type').value    = params.get('type');
+
+    // Wire all event listeners here so DOM is guaranteed ready
+    document.getElementById('btn-list').addEventListener('click', () => {
+      document.getElementById('list-view').style.display = '';
+      document.getElementById('map-view').style.display  = 'none';
+      document.getElementById('btn-list').classList.add('active');
+      document.getElementById('btn-map').classList.remove('active');
+    });
+
+    document.getElementById('btn-map').addEventListener('click', () => {
+      document.getElementById('list-view').style.display = 'none';
+      document.getElementById('map-view').style.display  = '';
+      document.getElementById('btn-map').classList.add('active');
+      document.getElementById('btn-list').classList.remove('active');
+      initMap(allResults);
+    });
+
+    document.getElementById('btn-search').addEventListener('click', doSearch);
+    document.getElementById('search-q').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+    document.getElementById('btn-clear').addEventListener('click', () => {
+      document.getElementById('search-q').value        = '';
+      document.getElementById('filter-service').value  = '';
+      document.getElementById('filter-type').value     = '';
+      document.getElementById('filter-sort').value     = 'relevance';
+      doSearch();
+    });
+
     doSearch();
   });
 }());

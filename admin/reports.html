@@ -86,7 +86,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!CareSync.auth.requireAuth(['admin'])) return;
   CareSync.appShell.init();
 
-  const s = await CareSync.adminService.getDashboardStats();
+  let s;
+  try {
+    s = await CareSync.adminService.getDashboardStats();
+  } catch (e) {
+    document.getElementById('report-summary').innerHTML = '<p class="text-secondary">Could not load statistics. Please refresh the page.</p>';
+    CareSync.toast.show('Failed to load report data.', 'error');
+    return;
+  }
 
   document.getElementById('report-summary').innerHTML = [
     { val: s.totalUsers.toLocaleString(),            label:'Total users' },

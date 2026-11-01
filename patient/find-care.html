@@ -236,6 +236,7 @@
     const params = new URLSearchParams(window.location.search);
     if (params.get('location')) document.getElementById('search-q').value = params.get('location');
     if (params.get('service'))  document.getElementById('filter-service').value = params.get('service');
+    if (params.get('type'))     document.getElementById('filter-type').value    = params.get('type');
     doSearch();
   });
 }());
