@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch {}
 
   try {
-    const refs = await CareSync.referralService.getFacilityReferrals('f2');
+    const refs = await CareSync.referralService.getFacilityReferrals(CareSync.facilityService._myId());
     const c = document.getElementById('fac-recent-refs');
     const sc = { Pending:'badge-warning', Accepted:'badge-info', 'In progress':'badge-info', Completed:'badge-success', Declined:'badge-danger' };
     c.innerHTML = refs.slice(0,3).map(r => `

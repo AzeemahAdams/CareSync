@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   try {
-    allRefs = await CareSync.referralService.getFacilityReferrals('f2');
+    allRefs = await CareSync.referralService.getFacilityReferrals(CareSync.facilityService._myId());
     render();
   } catch { document.getElementById('fac-referrals-list').innerHTML = '<p class="text-secondary">Could not load referrals.</p>'; }
 });

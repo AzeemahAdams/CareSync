@@ -10,7 +10,16 @@ CareSync.adminService = (() => {
   async function getUsers(params={}) {
     if (CareSync.config.USE_MOCK) {
       await delay(400);
-      let list = [...CareSync.mockData.USERS];
+      // Merge base mock users with any accounts registered during this session
+      let list;
+      try {
+        const stored = sessionStorage.getItem('cr_users');
+        list = stored ? JSON.parse(stored) : [...CareSync.mockData.USERS];
+      } catch { list = [...CareSync.mockData.USERS]; }
+      // Ensure base admin accounts are always present
+      CareSync.mockData.USERS.forEach(u => {
+        if (!list.find(x => x.id === u.id)) list.unshift(u);
+      });
       if (params.role) list = list.filter(u => u.role === params.role);
       if (params.q)    list = list.filter(u => u.name.toLowerCase().includes(params.q.toLowerCase()) || u.email.toLowerCase().includes(params.q.toLowerCase()));
       return { users: list, total: list.length };
