@@ -8,6 +8,10 @@ const OFFLINE_URL  = '/offline.html';
 const SHELL_ASSETS = [
   '/',
   '/index.html',
+  '/find-care.html',
+  '/about.html',
+  '/how-it-works.html',
+  '/contact.html',
   '/offline.html',
   '/css/variables.css',
   '/css/reset.css',
@@ -29,7 +33,13 @@ const SHELL_ASSETS = [
   '/js/components/form-validation.js',
   '/js/components/language-switcher.js',
   '/js/components/app-shell.js',
+  '/js/services/api-service.js',
+  '/js/services/auth-service.js',
+  '/js/services/mock-data.js',
+  '/js/services/facility-service.js',
   '/js/main.js',
+  '/js/pages/landing.js',
+  '/js/pages/contact.js',
 ];
 
 self.addEventListener('install', event => {

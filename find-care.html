@@ -127,6 +127,18 @@
 
   const statusClass = s => s === 'Verified' ? 'badge-success' : s === 'Pending' ? 'badge-warning' : 'badge-danger';
 
+  // If logged in, go straight to facility details.
+  // If not, go to login with ?next= pointing to facility details so
+  // the user lands on the right page after authenticating.
+  function _detailsUrl(id) {
+    const detailsPath = 'patient/facility-details.html?id=' + id;
+    if (CareSync.auth && CareSync.auth.isLoggedIn()) {
+      return detailsPath;
+    }
+    const next = encodeURIComponent(window.location.origin + '/' + detailsPath);
+    return 'auth/login.html?next=' + next;
+  }
+
   function renderCard(f) {
     return `<div class="facility-card">
       <div class="facility-card-header">
@@ -156,7 +168,7 @@
       </div>
       <div class="facility-card-footer">
         <span class="text-secondary" style="font-size:var(--fs-sm)">Updated ${f.updatedAt}</span>
-        <a href="auth/login.html" class="btn btn-primary btn-sm">View details</a>
+        <a href="${_detailsUrl(f.id)}" class="btn btn-primary btn-sm">View details</a>
       </div>
     </div>`;
   }
@@ -242,7 +254,7 @@
       });
       return L.marker([f.lat, f.lng], { icon })
         .addTo(mapInstance)
-        .bindPopup(`<strong>${f.name}</strong><br>${f.type}<br><a href="auth/login.html">View details &rarr;</a>`);
+        .bindPopup(`<strong>${f.name}</strong><br>${f.type}<br><a href="${_detailsUrl(f.id)}">View details &rarr;</a>`);
     });
     if (markers.length) mapInstance.fitBounds(L.featureGroup(markers).getBounds().pad(0.2));
   }

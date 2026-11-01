@@ -100,27 +100,69 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!CareSync.auth.requireAuth(['patient'])) return;
   CareSync.appShell.init();
 
-  const user = CareSync.mockData.USERS.find(u => u.role === 'patient') || CareSync.mockData.USERS[0];
-  const nameEl = document.getElementById('p-name');
+  // Load the actual logged-in user's details from sessionStorage / mock users
+  // so the profile shows the right person's data.
+  function _getLoggedInUser() {
+    const session = CareSync.auth.getSession();
+    if (!session) return null;
+    // Try to match against mock users by token prefix
+    const tokenId = session.token.replace('session_', '').split('_')[0]; // 'u1', 'u2', etc.
+    const stored  = sessionStorage.getItem('cr_users');
+    const users   = stored ? JSON.parse(stored) : CareSync.mockData.USERS;
+    return users.find(u => u.id === tokenId) || users.find(u => u.role === session.role) || users[0];
+  }
+
+  const user = _getLoggedInUser();
+  const nameEl  = document.getElementById('p-name');
   const emailEl = document.getElementById('p-email');
   const phoneEl = document.getElementById('p-phone');
 
-  nameEl.value  = user.name;
-  emailEl.value = user.email;
-  phoneEl.value = user.phone;
-  document.getElementById('profile-display-name').textContent = user.name;
-  document.getElementById('profile-initials').textContent = user.name.charAt(0).toUpperCase();
+  if (user) {
+    nameEl.value  = user.name  || '';
+    emailEl.value = user.email || '';
+    phoneEl.value = user.phone || '';
+    document.getElementById('profile-display-name').textContent = user.name || 'Patient';
+    document.getElementById('profile-initials').textContent = (user.name || 'P').charAt(0).toUpperCase();
+  }
 
-  const origValues = { name: user.name, email: user.email, phone: user.phone };
+  // Also pre-fill from sessionStorage name if available
+  const storedName = sessionStorage.getItem('cr_name');
+  if (storedName && nameEl && !nameEl.value) {
+    nameEl.value = storedName;
+    document.getElementById('profile-display-name').textContent = storedName;
+    document.getElementById('profile-initials').textContent = storedName.charAt(0).toUpperCase();
+  }
+
+  const origValues = { name: nameEl.value, email: emailEl.value, phone: phoneEl.value };
 
   document.getElementById('profile-form').addEventListener('submit', e => {
     e.preventDefault();
     if (!CareSync.forms.validate(e.target)) return;
+
+    // Persist updated name to sessionStorage so topbar reflects it immediately
+    try { sessionStorage.setItem('cr_name', nameEl.value.trim()); } catch {}
+
     const statusEl = document.getElementById('profile-status');
     statusEl.className = 'form-status is-success';
     statusEl.textContent = 'Profile updated successfully.';
     document.getElementById('profile-display-name').textContent = nameEl.value.trim();
     document.getElementById('profile-initials').textContent = nameEl.value.trim().charAt(0).toUpperCase();
+
+    // Update in stored users array so it persists within session
+    try {
+      const stored = sessionStorage.getItem('cr_users');
+      if (stored && user) {
+        const users = JSON.parse(stored);
+        const idx   = users.findIndex(u => u.id === user.id);
+        if (idx > -1) {
+          users[idx].name  = nameEl.value.trim();
+          users[idx].email = emailEl.value.trim();
+          users[idx].phone = phoneEl.value.trim();
+          sessionStorage.setItem('cr_users', JSON.stringify(users));
+        }
+      }
+    } catch {}
+
     CareSync.toast.show('Profile saved.', 'success');
     setTimeout(() => { statusEl.textContent = ''; statusEl.className = 'form-status'; }, 4000);
   });
