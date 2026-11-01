@@ -63,13 +63,14 @@
             <option>General consultation</option><option>Emergency care</option><option>Maternal health</option>
             <option>Paediatrics</option><option>Surgery</option><option>Dental care</option>
             <option>Eye care</option><option>Laboratory</option><option>Pharmacy</option>
-            <option>Radiology</option><option>Immunisation</option>
+            <option>Radiology</option><option>Immunisation</option><option>Cardiology</option>
+            <option>Oncology</option><option>ICU</option>
           </select>
           <select class="select filter-select" id="filter-type" aria-label="Facility type">
             <option value="">Any type</option>
             <option>Teaching Hospital</option><option>General Hospital</option>
             <option>Private Hospital</option><option>Primary Health Centre</option>
-            <option>Clinic</option><option>Pharmacy</option>
+            <option>Clinic</option>
           </select>
           <select class="select filter-select" id="filter-sort" aria-label="Sort by">
             <option value="relevance">Sort: Relevance</option>
@@ -77,10 +78,17 @@
             <option value="name">Sort: Name</option>
           </select>
           <button class="btn btn-primary" id="btn-search">Search</button>
+          <button class="btn btn-secondary locate-btn" id="btn-locate" title="Use my current location">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+            Near me
+          </button>
           <button class="btn btn-secondary" id="btn-clear">Clear</button>
         </div>
       </div>
-      <p id="results-summary" class="text-secondary" style="font-size:var(--fs-sm)"></p>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap;margin-top:var(--space-2)">
+        <div id="geo-status" style="font-size:var(--fs-sm);color:var(--color-text-muted);min-height:1.2em" aria-live="polite"></div>
+        <p id="results-summary" class="text-secondary" style="font-size:var(--fs-sm)"></p>
+      </div>
     </div>
 
     <!-- List view -->
@@ -108,6 +116,7 @@
 <script src="../js/services/auth-service.js"></script>
 <script src="../js/services/mock-data.js"></script>
 <script src="../js/services/facility-service.js"></script>
+<script src="../js/components/geo-map.js"></script>
 <script src="../js/components/app-shell.js"></script>
 <script>
 (function(){
@@ -116,9 +125,16 @@
     CareSync.appShell.init();
 
     const PAGE_SIZE = 6;
-    let allResults = [], currentPage = 1, mapInstance = null;
+    let allResults  = [], currentPage = 1, mapState = null, userCoords = null;
 
     const statusClass = s => s==='Verified'?'badge-success':s==='Pending'?'badge-warning':'badge-danger';
+
+    function setGeoStatus(type, text) {
+      const el = document.getElementById('geo-status');
+      if (!el) return;
+      el.style.color = type==='located'?'var(--color-success)':type==='error'?'var(--color-danger)':type==='locating'?'var(--color-primary)':'var(--color-text-muted)';
+      el.textContent = text;
+    }
 
     function renderCard(f) {
       return `<div class="facility-card">
@@ -128,8 +144,8 @@
         </div>
         <div class="facility-card-meta">
           <div class="facility-meta-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${f.location}</div>
-          <div class="facility-meta-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>${f.phone}</div>
-          <div class="facility-meta-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${f.hours} &nbsp;·&nbsp; ${f.distance} km away</div>
+          <div class="facility-meta-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg><a href="tel:${f.phone}" style="color:var(--color-primary)">${f.phone}</a></div>
+          <div class="facility-meta-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${f.hours} &nbsp;·&nbsp; <strong>${f.distance} km away</strong></div>
         </div>
         <div class="facility-card-tags">${f.services.slice(0,4).map(s=>`<span class="tag">${s}</span>`).join('')}${f.services.length>4?`<span class="tag">+${f.services.length-4} more</span>`:''}</div>
         <div class="facility-card-footer">
@@ -158,9 +174,9 @@
     function renderPagination() {
       const total = Math.ceil(allResults.length / PAGE_SIZE);
       if (total <= 1) { document.getElementById('pagination-wrap').innerHTML=''; return; }
-      let btns = `<button class="pagination-btn" ${currentPage===1?'disabled':''} id="pg-prev" aria-label="Previous page">‹</button>`;
+      let btns = `<button class="pagination-btn" ${currentPage===1?'disabled':''} id="pg-prev">‹</button>`;
       for (let i=1;i<=total;i++) btns += `<button class="pagination-btn ${i===currentPage?'active':''}" data-page="${i}">${i}</button>`;
-      btns += `<button class="pagination-btn" ${currentPage===total?'disabled':''} id="pg-next" aria-label="Next page">›</button>`;
+      btns += `<button class="pagination-btn" ${currentPage===total?'disabled':''} id="pg-next">›</button>`;
       const wrap = document.getElementById('pagination-wrap');
       wrap.innerHTML = `<div class="pagination">${btns}</div>`;
       wrap.querySelectorAll('[data-page]').forEach(b => b.addEventListener('click',()=>{currentPage=parseInt(b.dataset.page);renderList();}));
@@ -172,38 +188,60 @@
       const container = document.getElementById('facility-results');
       container.innerHTML = '<div class="skeleton" style="height:180px;grid-column:1/-1"></div>';
       try {
-        const { results, total } = await CareSync.facilityService.search({
-          q: document.getElementById('search-q').value.trim(),
+        let { results, total } = await CareSync.facilityService.search({
+          q:       document.getElementById('search-q').value.trim(),
           service: document.getElementById('filter-service').value,
-          type: document.getElementById('filter-type').value,
-          sort: document.getElementById('filter-sort').value,
+          type:    document.getElementById('filter-type').value,
+          sort:    document.getElementById('filter-sort').value,
         });
+        if (userCoords) results = CareSync.geoMap.sortByDistance(results, userCoords);
         allResults = results;
         currentPage = 1;
-        document.getElementById('results-summary').textContent = `${total} facilit${total===1?'y':'ies'} found`;
+        document.getElementById('results-summary').textContent = `${results.length} facilit${results.length===1?'y':'ies'} found${userCoords?' near you':''}`;
         renderList();
-        if (mapInstance) updateMapMarkers(results);
+        if (mapState) CareSync.geoMap.refreshMarkers(mapState, results, { popupLinkFn: f=>`facility-details.html?id=${f.id}` });
       } catch { container.innerHTML = '<p class="text-secondary" style="grid-column:1/-1">Error loading facilities. Please try again.</p>'; }
     }
 
-    // Map
-    function initMap(facilities) {
-      if (mapInstance) return;
-      const el = document.getElementById('find-care-map');
-      mapInstance = L.map(el, { scrollWheelZoom: false }).setView([6.5244, 3.3792], 11);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(mapInstance);
-      updateMapMarkers(facilities);
-      setTimeout(()=>mapInstance.invalidateSize(),300);
+    async function locateMe() {
+      const btn = document.getElementById('btn-locate');
+      btn.disabled = true;
+      setGeoStatus('locating', '⟳ Finding your location…');
+      try {
+        userCoords = await CareSync.geoMap.getPosition(10000);
+        try {
+          const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${userCoords.lat}&lon=${userCoords.lng}&zoom=12`,{headers:{'Accept-Language':'en'}});
+          const d = await r.json();
+          const a = d.address||{};
+          const place = a.city||a.town||a.village||a.suburb||a.county||'';
+          if (place) document.getElementById('search-q').value = place;
+        } catch {}
+        setGeoStatus('located', '✓ Location found — showing nearby facilities');
+        CareSync.toast.show('Location found. Showing nearby facilities.', 'success');
+        if (mapState) CareSync.geoMap.setUserMarker(mapState, userCoords);
+        await doSearch();
+      } catch (err) {
+        userCoords = null;
+        const msg = err.code===1 ? 'Location access denied. Allow location in your browser.' : 'Could not determine your location.';
+        setGeoStatus('error', '✗ ' + msg);
+        CareSync.toast.show(msg, 'error');
+      } finally { btn.disabled = false; }
     }
 
-    function updateMapMarkers(facilities) {
-      if (!mapInstance) return;
-      mapInstance.eachLayer(l=>{ if(l instanceof L.Marker) mapInstance.removeLayer(l); });
-      const markers = facilities.map(f => {
-        const icon = L.divIcon({className:'',html:`<div style="background:${f.status==='Verified'?'#16A34A':'#D97706'};width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>`,iconSize:[14,14],iconAnchor:[7,7]});
-        return L.marker([f.lat,f.lng],{icon}).addTo(mapInstance).bindPopup(`<strong>${f.name}</strong><br>${f.type}<br><a href="facility-details.html?id=${f.id}">View details →</a>`);
+    function openMap() {
+      if (mapState) {
+        CareSync.geoMap.refreshMarkers(mapState, allResults, { popupLinkFn: f=>`facility-details.html?id=${f.id}` });
+        setTimeout(()=>mapState.map.invalidateSize(),200);
+        return;
+      }
+      mapState = CareSync.geoMap.buildMap('find-care-map', {
+        center:     userCoords||{lat:6.5244,lng:3.3792},
+        zoom:       userCoords?13:11,
+        facilities: allResults,
+        userCoords: userCoords||undefined,
+        scrollWheel:false,
+        popupLinkFn: f=>`facility-details.html?id=${f.id}`,
       });
-      if (markers.length) mapInstance.fitBounds(L.featureGroup(markers).getBounds().pad(0.2));
     }
 
     // View toggle
@@ -213,31 +251,40 @@
       document.getElementById('btn-list').classList.add('active');
       document.getElementById('btn-map').classList.remove('active');
     });
-
     document.getElementById('btn-map').addEventListener('click', () => {
       document.getElementById('list-view').style.display='none';
       document.getElementById('map-view').style.display='';
       document.getElementById('btn-map').classList.add('active');
       document.getElementById('btn-list').classList.remove('active');
-      initMap(allResults);
+      openMap();
     });
-
     document.getElementById('btn-search').addEventListener('click', doSearch);
+    document.getElementById('btn-locate').addEventListener('click', locateMe);
+    document.getElementById('search-q').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
     document.getElementById('btn-clear').addEventListener('click', () => {
       document.getElementById('search-q').value='';
       document.getElementById('filter-service').value='';
       document.getElementById('filter-type').value='';
       document.getElementById('filter-sort').value='relevance';
+      userCoords = null;
+      setGeoStatus('','');
       doSearch();
     });
-    document.getElementById('search-q').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
 
-    // Initial load — read URL params from landing page search
     const params = new URLSearchParams(window.location.search);
     if (params.get('location')) document.getElementById('search-q').value = params.get('location');
     if (params.get('service'))  document.getElementById('filter-service').value = params.get('service');
     if (params.get('type'))     document.getElementById('filter-type').value    = params.get('type');
-    doSearch();
+
+    // Load results then silently try geolocation
+    await doSearch();
+    CareSync.geoMap.getPosition(5000)
+      .then(coords => {
+        userCoords = coords;
+        setGeoStatus('located', '✓ Showing results near your location');
+        doSearch();
+      })
+      .catch(()=>{});
   });
 }());
 </script>

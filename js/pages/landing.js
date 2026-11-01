@@ -1,15 +1,13 @@
 // js/pages/landing.js
-// Self-initialising — no import needed from main.js.
-// Loaded as a plain <script> tag (NOT type="module") AFTER main.js in index.html.
-// Initialises on window.load so layout.render() has fully settled before
-// Leaflet measures the map container.
+// Hero map with live geolocation + nearby facility pins.
+// Self-initialising plain script — loaded after main.js in index.html.
 
 (function () {
   'use strict';
 
-  // ── Hero search form ────────────────────────────────────────────────────────
+  // ── Hero search form ───────────────────────────────────────────────────────
   function bindSearchForm() {
-    const form = document.getElementById('hero-search');
+    var form = document.getElementById('hero-search');
     if (!form) return;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -19,67 +17,73 @@
     });
   }
 
-  // ── Map ─────────────────────────────────────────────────────────────────────
-  function initMap() {
+  // ── Hero map ───────────────────────────────────────────────────────────────
+  function initHeroMap() {
     var mapEl = document.getElementById('hero-map');
-    if (!mapEl) return;
+    if (!mapEl || typeof L === 'undefined') return;
 
-    if (typeof L === 'undefined') {
-      console.error('CareSync: Leaflet not loaded. Check the CDN <script> tag in index.html.');
-      return;
-    }
+    // Default to Lagos centre while we wait for geolocation
+    var DEFAULT = { lat: 6.5244, lng: 3.3792 };
+    var facilities = CareSync.mockData ? CareSync.mockData.FACILITIES : [];
 
-    var map = L.map(mapEl, {
-      zoomControl: true,
-      dragging: true,
-      scrollWheelZoom: false,
-      attributionControl: true
-    }).setView([6.5244, 3.3792], 12);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    var facilities = [
-      { name: 'Lagos University Teaching Hospital', lat: 6.5000, lng: 3.3500, distance: '2.4 km', status: 'Verified' },
-      { name: 'St. Nicholas Hospital',              lat: 6.4500, lng: 3.4000, distance: '4.1 km', status: 'Verified' },
-      { name: 'Primary Health Centre \u2013 Ikeja', lat: 6.6000, lng: 3.3000, distance: '5.8 km', status: 'Pending'  }
-    ];
-
-    var bestIcon = L.divIcon({
-      className: '',
-      html: '<div style="background:#3B82F6;width:18px;height:18px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5);"></div>',
-      iconSize: [18, 18],
-      iconAnchor: [9, 9]
+    var mapState = CareSync.geoMap.buildMap(mapEl, {
+      center:       DEFAULT,
+      zoom:         12,
+      facilities:   facilities.slice(0, 6),   // show first 6 on the preview
+      scrollWheel:  false,
+      popupLinkFn:  function (f) { return 'find-care.html'; },
+      onMarkerClick: showHeroCard,
     });
 
-    var stdIcon = L.divIcon({
-      className: '',
-      html: '<div style="background:#1E293B;width:13px;height:13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);"></div>',
-      iconSize: [13, 13],
-      iconAnchor: [6, 6]
-    });
+    if (!mapState) return;
 
-    var markers = facilities.map(function (f, i) {
-      return L.marker([f.lat, f.lng], { icon: i === 0 ? bestIcon : stdIcon })
-        .addTo(map)
-        .on('click', function () { showCard(f); });
-    });
+    // ── Try to get real location ─────────────────────────────────────────────
+    CareSync.geoMap.getPosition(8000)
+      .then(function (coords) {
+        // Update user pin
+        CareSync.geoMap.setUserMarker(mapState, coords);
 
-    map.fitBounds(L.featureGroup(markers).getBounds().pad(0.3));
+        // Recalculate real distances and sort
+        var nearby = CareSync.geoMap.sortByDistance(facilities, coords).slice(0, 8);
 
-    // Second invalidateSize after tiles start arriving — belt-and-suspenders
-    // for any residual flex/grid size discrepancy.
-    setTimeout(function () { map.invalidateSize(); }, 400);
+        // Refresh facility markers with real distances
+        CareSync.geoMap.refreshMarkers(mapState, nearby, {
+          popupLinkFn:  function (f) { return 'find-care.html'; },
+          onMarkerClick: showHeroCard,
+        });
+
+        // Auto-fill location field with nearest city
+        var locInput = document.getElementById('s-loc');
+        if (locInput && !locInput.value) {
+          // Reverse-geocode via Nominatim (free, no key needed)
+          fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='
+            + coords.lat + '&lon=' + coords.lng + '&zoom=10', {
+            headers: { 'Accept-Language': 'en' }
+          })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            var addr = data.address || {};
+            var place = addr.city || addr.town || addr.village || addr.county || '';
+            if (place && !locInput.value) locInput.value = place;
+          })
+          .catch(function () {}); // silently ignore if offline
+        }
+
+        setTimeout(function () { mapState.map.invalidateSize(); }, 400);
+      })
+      .catch(function (err) {
+        // Geolocation denied or unavailable — stay on Lagos default, no error shown
+        console.info('CareSync: geolocation unavailable, using default centre.', err.message);
+      });
   }
 
-  // ── Overlay card ─────────────────────────────────────────────────────────────
-  function showCard(facility) {
+  // ── Overlay result card ────────────────────────────────────────────────────
+  function showHeroCard(facility) {
     var card = document.getElementById('hero-result-card');
     if (!card) return;
     document.getElementById('result-name').textContent     = facility.name;
-    document.getElementById('result-distance').textContent = 'Distance: ' + facility.distance;
+    document.getElementById('result-distance').textContent =
+      facility.distance !== undefined ? facility.distance + ' km away' : facility.type;
     var st = document.getElementById('result-status');
     st.textContent = facility.status;
     st.className   = 'badge ' + (facility.status === 'Verified' ? 'badge-success' : 'badge-warning');
@@ -91,15 +95,12 @@
     if (card) card.classList.add('hidden');
   }
 
-  // Exposed for inline onclick="hideHeroCard()" in index.html
   window.hideHeroCard = hideHeroCard;
 
-  // ── Boot ─────────────────────────────────────────────────────────────────────
-  // window.load fires after ALL resources (CSS, fonts, images) are done and
-  // layout.render() has fully repainted — guarantees a non-zero container size.
+  // ── Boot (window.load ensures layout.render() has settled) ────────────────
   window.addEventListener('load', function () {
     bindSearchForm();
-    initMap();
+    initHeroMap();
   });
 
 }());
