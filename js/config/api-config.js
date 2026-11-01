@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────────────
-   api-config.js — Central API configuration for CareRoute.
+﻿/* ─────────────────────────────────────────────────────────────────────────
+   api-config.js — Central API configuration for CareSync.
 
    To connect a real backend:
      1. Set BASE_URL to your API server's base URL.
@@ -9,7 +9,7 @@
 window.CareSync = window.CareSync || {};
 
 CareSync.config = {
-  BASE_URL:     'https://api.careroute.ng/v1', // Production API base URL
+  BASE_URL:     'https://api.CareSync.ng/v1', // Production API base URL
   USE_MOCK:     true,                           // Set false when backend is live
   DEFAULT_LANG: 'en',
 

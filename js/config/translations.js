@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────────────
-   translations.js — CareRoute UI translation dictionary.
+﻿/* ─────────────────────────────────────────────────────────────────────────
+   translations.js — CareSync UI translation dictionary.
 
    Supported languages: en (English), yo (Yorùbá).
    To add Hausa (ha) or Igbo (ig), append a new object — no other code changes needed.

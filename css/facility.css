@@ -6,8 +6,8 @@
 /* Sidebar accent colour for facility role */
 .role-facility .sidebar-nav-item a.active,
 .role-facility .sidebar-nav-item a[aria-current="page"] {
-  background: #ECFDF5;
-  color: #065F46;
+  background: var(--color-teal-bg);
+  color: var(--color-teal-text);
 }
 
 .role-facility .sidebar-nav-item a.active svg,
@@ -76,10 +76,10 @@
   flex-shrink: 0;
 }
 
-.status-pending  { background: var(--color-warning-bg); color: #92400E; }
+.status-pending  { background: var(--color-warning-bg);  color: var(--color-warning-text); }
 .status-accepted { background: var(--color-primary-light); color: var(--color-primary-dark); }
-.status-in-progress { background: #EDE9FE; color: #5B21B6; }
-.status-completed   { background: var(--color-success-bg); color: #166534; }
-.status-declined    { background: var(--color-danger-bg); color: #991B1B; }
-.status-verified    { background: var(--color-success-bg); color: #166534; }
-.status-unverified  { background: var(--color-danger-bg); color: #991B1B; }
+.status-in-progress { background: var(--color-purple-bg);  color: var(--color-purple-text); }
+.status-completed   { background: var(--color-success-bg); color: var(--color-success-text); }
+.status-declined    { background: var(--color-danger-bg);  color: var(--color-danger-text); }
+.status-verified    { background: var(--color-success-bg); color: var(--color-success-text); }
+.status-unverified  { background: var(--color-danger-bg);  color: var(--color-danger-text); }

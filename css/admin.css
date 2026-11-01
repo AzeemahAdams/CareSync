@@ -39,7 +39,7 @@ table.data-table {
 .data-table tr:last-child td { border-bottom: 0; }
 
 .data-table tbody tr:hover td {
-  background: #f8fafc;
+  background: #f8fafc; /* lightest slate — no variable equivalent needed */
 }
 
 .data-table .td-muted { color: var(--color-text-secondary); }
@@ -205,7 +205,7 @@ table.data-table {
 .topbar-search svg {
   position: absolute;
   left: var(--space-3);
-  color: #64748B;
+  color: var(--color-dark-text-dim);
   pointer-events: none;
 }
 
@@ -221,7 +221,7 @@ table.data-table {
   transition: background var(--transition), border-color var(--transition);
 }
 
-.topbar-search input::placeholder { color: #64748B; }
+.topbar-search input::placeholder { color: var(--color-dark-text-dim); }
 .topbar-search input:focus {
   outline: none;
   background: rgba(255,255,255,0.12);

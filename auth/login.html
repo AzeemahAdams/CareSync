@@ -1,10 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login — CareRoute</title>
-  <meta name="description" content="Log in to your CareRoute account.">
+  <title>Login — CareSync</title>
+  <meta name="description" content="Log in to your CareSync account.">
   <meta name="theme-color" content="#1E293B">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,7 +65,7 @@
       </div>
     </div>
 
-    <p class="auth-brand-footer">&copy; <span id="brand-year"></span> CareRoute. All rights reserved.</p>
+    <p class="auth-brand-footer">&copy; <span id="brand-year"></span> CareSync. All rights reserved.</p>
   </div>
 
   <!-- Right form panel -->
@@ -82,7 +82,7 @@
 
       <div class="auth-header">
         <h1>Welcome back</h1>
-        <p>Log in to your CareRoute account to continue.</p>
+        <p>Log in to your CareSync account to continue.</p>
       </div>
 
       <!-- Test credentials hint — remove once real auth backend is live -->
@@ -90,10 +90,10 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
         <div style="font-size:var(--fs-sm)">
           <strong>Test accounts:</strong><br>
-          Patient: <code>patient@careroute.ng</code> &nbsp;&middot;&nbsp;
-          Facility: <code>facility@careroute.ng</code> &nbsp;&middot;&nbsp;
-          Admin: <code>admin@careroute.ng</code><br>
-          Password for all: <code>CareRoute1!</code>
+          Patient: <code>patient@CareSync.ng</code> &nbsp;&middot;&nbsp;
+          Facility: <code>facility@CareSync.ng</code> &nbsp;&middot;&nbsp;
+          Admin: <code>admin@CareSync.ng</code><br>
+          Password for all: <code>CareSync1!</code>
         </div>
       </div>
 
@@ -172,7 +172,7 @@
       actions: [
         { label: 'Cancel', variant: 'secondary' },
         { label: 'Send reset link', variant: 'primary', onClick: function() {
-          CareSync.toast.show('Password reset is not yet available. Contact support@careroute.ng.', 'info');
+          CareSync.toast.show('Password reset is not yet available. Contact support@CareSync.ng.', 'info');
         }}
       ]
     });

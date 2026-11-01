@@ -1,8 +1,8 @@
-// CareRoute Service Worker — Phase 7 offline support
+﻿// CareSync Service Worker — Phase 7 offline support
 // Caches static shell assets for offline use.
 // IMPORTANT: Never cache authenticated API responses or patient-identifiable data.
 
-const CACHE_NAME   = 'careroute-v1';
+const CACHE_NAME   = 'CareSync-v1';
 const OFFLINE_URL  = '/offline.html';
 
 const SHELL_ASSETS = [

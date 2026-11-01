@@ -1,8 +1,8 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Profile — CareRoute</title>
+  <title>Profile — CareSync</title>
   <meta name="theme-color" content="#1E293B">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
@@ -77,9 +77,9 @@
     <div class="section-card" style="margin-top:var(--space-5)">
       <div class="section-card-header"><h2>Account actions</h2></div>
       <div class="section-card-body" style="display:flex;gap:var(--space-3);flex-wrap:wrap">
-        <button class="btn btn-secondary" onclick="CareSync.modal.open({title:'Change password',body:'Password change will be available after backend integration. Please contact support@careroute.ng to reset your password.',actions:[{label:'OK',variant:'primary'}]})">Change password</button>
+        <button class="btn btn-secondary" onclick="CareSync.modal.open({title:'Change password',body:'Password change will be available after backend integration. Please contact support@CareSync.ng to reset your password.',actions:[{label:'OK',variant:'primary'}]})">Change password</button>
         <button class="btn btn-secondary" onclick="CareSync.modal.open({title:'Notification settings',body:'Notification preferences will be available after backend integration.',actions:[{label:'OK',variant:'primary'}]})">Notification settings</button>
-        <button class="btn btn-danger" style="margin-left:auto" onclick="CareSync.modal.confirm('Delete account','Permanently deleting your account will remove all your data. This cannot be undone. Are you sure?',()=>CareSync.toast.show('Account deletion requires backend confirmation. Contact support@careroute.ng.','warning'),true)">Delete account</button>
+        <button class="btn btn-danger" style="margin-left:auto" onclick="CareSync.modal.confirm('Delete account','Permanently deleting your account will remove all your data. This cannot be undone. Are you sure?',()=>CareSync.toast.show('Account deletion requires backend confirmation. Contact support@CareSync.ng.','warning'),true)">Delete account</button>
       </div>
     </div>
   </main>

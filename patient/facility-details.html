@@ -1,8 +1,8 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Facility Details — CareRoute</title>
+  <title>Facility Details — CareSync</title>
   <meta name="theme-color" content="#1E293B">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
@@ -37,7 +37,9 @@
   </aside>
 
   <main class="app-main" id="main">
-    <div style="margin-bottom:var(--space-4)"><a href="find-care.html" class="btn btn-secondary btn-sm">← Back to search</a></div>
+    <div class="back-link-wrap">
+      <a href="find-care.html" class="btn btn-secondary btn-sm">← Back to search</a>
+    </div>
     <div id="facility-detail-content">
       <div class="skeleton" style="height:200px;margin-bottom:var(--space-4)"></div>
       <div class="skeleton" style="height:120px;margin-bottom:var(--space-4)"></div>
@@ -63,64 +65,102 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!CareSync.auth.requireAuth(['patient'])) return;
   CareSync.appShell.init();
 
-  const id = new URLSearchParams(window.location.search).get('id');
+  const id        = new URLSearchParams(window.location.search).get('id');
   const container = document.getElementById('facility-detail-content');
 
-  if (!id) { container.innerHTML = '<p class="text-secondary">No facility specified.</p>'; return; }
+  if (!id) {
+    container.innerHTML = '<p class="text-secondary">No facility specified. <a href="find-care.html">Go back to search</a>.</p>';
+    return;
+  }
 
   try {
     const f = await CareSync.facilityService.getById(id);
-    document.title = f.name + ' — CareRoute';
-    const statusCls = f.status==='Verified'?'badge-success':f.status==='Pending'?'badge-warning':'badge-danger';
+    document.title = f.name + ' — CareSync';
+
+    const statusCls = f.status === 'Verified' ? 'badge-success'
+                    : f.status === 'Pending'   ? 'badge-warning'
+                    : 'badge-danger';
+
+    const metaItems = [
+      { label: 'Address',      value: f.address },
+      { label: 'Phone',        value: `<a href="tel:${f.phone}" class="referral-meta-link">${f.phone}</a>` },
+      { label: 'Email',        value: `<a href="mailto:${f.email}" class="referral-meta-link">${f.email}</a>` },
+      { label: 'Hours',        value: f.hours },
+      { label: 'Distance',     value: f.distance + ' km away' },
+      { label: 'Last updated', value: f.updatedAt },
+    ];
+
+    const accessibilityHtml = f.accessibility.length
+      ? `<ul class="accessibility-list">
+          ${f.accessibility.map(a => `
+            <li class="accessibility-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              ${a}
+            </li>`).join('')}
+         </ul>`
+      : '<p class="text-secondary" style="font-size:var(--fs-sm)">No accessibility information recorded.</p>';
 
     container.innerHTML = `
       <div class="section-card" style="margin-bottom:var(--space-5)">
         <div class="section-card-body">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-4);flex-wrap:wrap;margin-bottom:var(--space-4)">
+          <div class="facility-detail-header">
             <div>
-              <h1 style="font-size:clamp(1.375rem,1.1rem+1.3vw,1.875rem);margin-bottom:var(--space-2)">${f.name}</h1>
+              <h1 class="facility-detail-title">${f.name}</h1>
               <p class="text-secondary">${f.type}</p>
             </div>
-            <span class="badge ${statusCls}" style="font-size:var(--fs-sm);padding:6px 14px">${f.status}</span>
+            <span class="badge ${statusCls}" style="padding:6px 14px">${f.status}</span>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-4)">
-            <div><strong style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted)">Address</strong><p style="margin-top:4px">${f.address}</p></div>
-            <div><strong style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted)">Phone</strong><p style="margin-top:4px"><a href="tel:${f.phone}" style="color:var(--color-primary)">${f.phone}</a></p></div>
-            <div><strong style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted)">Email</strong><p style="margin-top:4px"><a href="mailto:${f.email}" style="color:var(--color-primary)">${f.email}</a></p></div>
-            <div><strong style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted)">Hours</strong><p style="margin-top:4px">${f.hours}</p></div>
-            <div><strong style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted)">Distance</strong><p style="margin-top:4px">${f.distance} km away</p></div>
-            <div><strong style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted)">Last updated</strong><p style="margin-top:4px">${f.updatedAt}</p></div>
+          <div class="facility-meta-grid">
+            ${metaItems.map(item => `
+              <div>
+                <span class="facility-meta-label">${item.label}</span>
+                <p>${item.value}</p>
+              </div>`).join('')}
           </div>
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-5);margin-bottom:var(--space-5)">
+      <div class="facility-cards-row">
         <div class="section-card">
           <div class="section-card-header"><h2>Services</h2></div>
           <div class="section-card-body">
-            <div style="display:flex;flex-wrap:wrap;gap:var(--space-2)">${f.services.map(s=>`<span class="tag">${s}</span>`).join('')}</div>
+            <div class="services-tags">
+              ${f.services.map(s => `<span class="tag">${s}</span>`).join('')}
+            </div>
           </div>
         </div>
         <div class="section-card">
           <div class="section-card-header"><h2>Accessibility</h2></div>
-          <div class="section-card-body">
-            ${f.accessibility.length ? `<ul style="display:grid;gap:var(--space-2)">${f.accessibility.map(a=>`<li style="display:flex;align-items:center;gap:8px;font-size:var(--fs-sm)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>${a}</li>`).join('')}</ul>` : '<p class="text-secondary" style="font-size:var(--fs-sm)">No accessibility information recorded.</p>'}
-          </div>
+          <div class="section-card-body">${accessibilityHtml}</div>
         </div>
       </div>
 
       <div class="section-card" style="margin-bottom:var(--space-5)">
         <div class="section-card-header"><h2>Location</h2></div>
-        <div style="height:300px;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden" id="detail-map"></div>
+        <div class="detail-map-wrap" id="detail-map"></div>
       </div>
 
       <div class="section-card">
         <div class="section-card-header"><h2>Information status</h2></div>
         <div class="section-card-body">
-          <p class="text-secondary" style="font-size:var(--fs-sm)">This facility's information is <strong>${f.status.toLowerCase()}</strong>. Last updated: ${f.updatedAt}.</p>
-          ${f.status!=='Verified' ? `<div class="note" style="margin-top:var(--space-3)">Unverified or pending information has not been confirmed by CareRoute administrators. Contact the facility directly to confirm details.</div>` : ''}
+          <p class="text-secondary" style="font-size:var(--fs-sm)">
+            This facility's information is <strong>${f.status.toLowerCase()}</strong>.
+            Last updated: ${f.updatedAt}.
+          </p>
+          ${f.status !== 'Verified' ? `
+            <div class="note" style="margin-top:var(--space-3)">
+              Unverified or pending information has not been confirmed by CareSync administrators.
+              Contact the facility directly to confirm details before visiting.
+            </div>` : ''}
           <div style="margin-top:var(--space-4)">
-            <button class="btn btn-primary" onclick="CareSync.modal.open({title:'Request referral',body:'Referral requests are processed by your current healthcare provider. Please discuss this facility with your clinician to initiate a referral through CareRoute.',actions:[{label:'Understood',variant:'primary'}]})">Request referral</button>
+            <button class="btn btn-primary"
+              onclick="CareSync.modal.open({
+                title: 'Request referral',
+                body: 'Referral requests are processed by your current healthcare provider. Please discuss this facility with your clinician to initiate a referral through CareSync.',
+                actions: [{ label: 'Understood', variant: 'primary' }]
+              })">
+              Request referral
+            </button>
           </div>
         </div>
       </div>`;
@@ -129,15 +169,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     requestAnimationFrame(() => {
       const mapEl = document.getElementById('detail-map');
       if (!mapEl) return;
-      const m = L.map(mapEl,{zoomControl:true,scrollWheelZoom:false}).setView([f.lat,f.lng],15);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(m);
-      L.marker([f.lat,f.lng]).addTo(m).bindPopup(`<strong>${f.name}</strong>`).openPopup();
-      mapEl.querySelectorAll('svg').forEach(s=>{s.style.maxWidth='none';s.style.maxHeight='none';});
-      setTimeout(()=>m.invalidateSize(),300);
+      const m = L.map(mapEl, { zoomControl: true, scrollWheelZoom: false }).setView([f.lat, f.lng], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(m);
+      L.marker([f.lat, f.lng]).addTo(m).bindPopup(`<strong>${f.name}</strong>`).openPopup();
+      mapEl.querySelectorAll('svg').forEach(s => { s.style.maxWidth = 'none'; s.style.maxHeight = 'none'; });
+      setTimeout(() => m.invalidateSize(), 300);
     });
 
-  } catch(e) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-state-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div><h3>Facility not found</h3><p>${e.message||'Could not load facility details.'}</p><a href="find-care.html" class="btn btn-primary">Back to search</a></div>`;
+  } catch (e) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        </div>
+        <h3>Facility not found</h3>
+        <p>${e.message || 'Could not load facility details.'}</p>
+        <a href="find-care.html" class="btn btn-primary">Back to search</a>
+      </div>`;
   }
 });
 </script>

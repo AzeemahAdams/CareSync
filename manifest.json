@@ -1,6 +1,6 @@
-{
-  "name": "CareRoute",
-  "short_name": "CareRoute",
+﻿{
+  "name": "CareSync",
+  "short_name": "CareSync",
   "description": "Healthcare access, navigation and referral coordination platform.",
   "start_url": "/index.html",
   "display": "standalone",

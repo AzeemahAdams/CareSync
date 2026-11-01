@@ -62,7 +62,7 @@
 }
 
 .topbar-name {
-  color: #CBD5E1;
+  color: var(--color-dark-text-secondary);
   font-size: var(--fs-sm);
   font-weight: 500;
 }
@@ -640,9 +640,9 @@
   font-size: var(--fs-sm);
   font-weight: 700;
 }
-.match-score.high   { background: var(--color-success-bg); color: #166534; }
-.match-score.medium { background: var(--color-warning-bg); color: #92400E; }
-.match-score.low    { background: var(--color-danger-bg);  color: #991B1B; }
+.match-score.high   { background: var(--color-success-bg); color: var(--color-success-text); }
+.match-score.medium { background: var(--color-warning-bg); color: var(--color-warning-text); }
+.match-score.low    { background: var(--color-danger-bg);  color: var(--color-danger-text); }
 
 .match-bar-row {
   display: flex;
@@ -668,15 +668,15 @@
 
 /* ── Emergency ── */
 .emergency-banner {
-  background: #7F1D1D;
-  border: 1px solid #DC2626;
+  background: var(--color-emergency-bg);
+  border: 1px solid var(--color-danger);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   display: flex;
   align-items: flex-start;
   gap: var(--space-4);
   margin-bottom: var(--space-5);
-  color: #FEE2E2;
+  color: var(--color-emergency-text);
 }
 
 .emergency-banner-icon {
@@ -687,14 +687,14 @@
   background: rgba(220,38,38,0.3);
   display: grid;
   place-items: center;
-  color: #FCA5A5;
+  color: var(--color-emergency-highlight);
 }
 
 .emergency-number {
   font-family: var(--font-heading);
   font-size: 2.5rem;
   font-weight: 800;
-  color: #FCA5A5;
+  color: var(--color-emergency-highlight);
   letter-spacing: 0.04em;
   line-height: 1;
 }
@@ -773,4 +773,138 @@
 .pagination-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* ── Emergency page ── */
+.emergency-notice-title {
+  color: var(--color-emergency-highlight);
+  font-size: var(--fs-h3);
+  margin-bottom: var(--space-2);
+}
+
+.emergency-numbers {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: var(--space-3);
+}
+
+.emergency-number-group p {
+  font-size: var(--fs-sm);
+  color: var(--color-emergency-highlight);
+  margin-bottom: 4px;
+}
+
+.emergency-steps {
+  display: grid;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.emergency-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.emergency-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  flex-shrink: 0;
+  font-size: var(--fs-sm);
+}
+
+.emergency-map-wrap {
+  height: 380px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
+}
+
+.emergency-map-wrap svg { max-width: none; max-height: none; }
+
+.referral-meta-link {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ── Facility details page ── */
+.facility-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+
+.facility-detail-title {
+  font-size: clamp(1.375rem, 1.1rem + 1.3vw, 1.875rem);
+  margin-bottom: var(--space-2);
+}
+
+.facility-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.facility-meta-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.facility-cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.detail-map-wrap {
+  height: 300px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
+}
+
+.detail-map-wrap svg { max-width: none; max-height: none; }
+
+.accessibility-list {
+  display: grid;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.accessibility-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+}
+
+.accessibility-item svg { color: var(--color-success); flex-shrink: 0; }
+
+.services-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.back-link-wrap {
+  margin-bottom: var(--space-4);
 }

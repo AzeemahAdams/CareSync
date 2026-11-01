@@ -1,13 +1,14 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Emergency — CareRoute</title>
+  <title>Emergency — CareSync</title>
   <meta name="theme-color" content="#DC2626">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/variables.css"><link rel="stylesheet" href="../css/reset.css"><link rel="stylesheet" href="../css/global.css">
-  <link rel="stylesheet" href="../css/components.css"><link rel="stylesheet" href="../css/patient.css"><link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="../css/variables.css"><link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/global.css"><link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/patient.css"><link rel="stylesheet" href="../css/responsive.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
@@ -36,28 +37,32 @@
   </aside>
 
   <main class="app-main" id="main">
+
     <!-- Emergency banner -->
     <div class="emergency-banner" role="alert">
       <div class="emergency-banner-icon" aria-hidden="true">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
       </div>
       <div>
-        <h2 style="color:#FCA5A5;font-size:var(--fs-h3);margin-bottom:var(--space-2)">Emergency Notice</h2>
-        <p style="margin-bottom:var(--space-3)">CareRoute does NOT contact emergency services or dispatch ambulances. In a life-threatening emergency, call your local emergency number immediately.</p>
-        <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;align-items:center">
-          <div>
-            <p style="font-size:var(--fs-sm);color:#FCA5A5;margin-bottom:4px">Nigeria emergency number</p>
+        <h2 class="emergency-notice-title">Emergency Notice</h2>
+        <p>CareSync does NOT contact emergency services or dispatch ambulances. In a life-threatening emergency, call your local emergency number immediately.</p>
+        <div class="emergency-numbers">
+          <div class="emergency-number-group">
+            <p>Nigeria emergency number</p>
             <span class="emergency-number">112</span>
           </div>
-          <div>
-            <p style="font-size:var(--fs-sm);color:#FCA5A5;margin-bottom:4px">Lagos State Emergency</p>
+          <div class="emergency-number-group">
+            <p>Lagos State Emergency</p>
             <span class="emergency-number">767</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="page-header"><h1>Emergency Healthcare Information</h1><p>Nearby facilities with emergency and critical care services.</p></div>
+    <div class="page-header">
+      <h1>Emergency Healthcare Information</h1>
+      <p>Nearby facilities with emergency and critical care services.</p>
+    </div>
 
     <!-- 24-hour facilities -->
     <div class="section-card" style="margin-bottom:var(--space-5)">
@@ -70,21 +75,22 @@
     <!-- Map -->
     <div class="section-card" style="margin-bottom:var(--space-5)">
       <div class="section-card-header"><h2>Facility locations</h2></div>
-      <div style="height:380px;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden" id="emergency-map"></div>
+      <div class="emergency-map-wrap" id="emergency-map"></div>
     </div>
 
     <!-- Guidance -->
     <div class="section-card">
       <div class="section-card-header"><h2>Emergency guidance</h2></div>
       <div class="section-card-body">
-        <ul style="display:grid;gap:var(--space-3)">
-          <li style="display:flex;align-items:flex-start;gap:var(--space-3)"><span style="width:28px;height:28px;border-radius:50%;background:var(--color-danger-bg);color:var(--color-danger);display:grid;place-items:center;font-weight:800;flex-shrink:0">1</span><p>Call <strong>112</strong> (Nigeria) or <strong>767</strong> (Lagos) for life-threatening emergencies.</p></li>
-          <li style="display:flex;align-items:flex-start;gap:var(--space-3)"><span style="width:28px;height:28px;border-radius:50%;background:var(--color-danger-bg);color:var(--color-danger);display:grid;place-items:center;font-weight:800;flex-shrink:0">2</span><p>Contact the facility directly before travelling to confirm they can receive you.</p></li>
-          <li style="display:flex;align-items:flex-start;gap:var(--space-3)"><span style="width:28px;height:28px;border-radius:50%;background:var(--color-danger-bg);color:var(--color-danger);display:grid;place-items:center;font-weight:800;flex-shrink:0">3</span><p>CareRoute shows facility contacts and directions only. It does not dispatch help.</p></li>
-          <li style="display:flex;align-items:flex-start;gap:var(--space-3)"><span style="width:28px;height:28px;border-radius:50%;background:var(--color-danger-bg);color:var(--color-danger);display:grid;place-items:center;font-weight:800;flex-shrink:0">4</span><p>Always call the facility before travelling to confirm they can receive you and that the information shown is current.</p></li>
+        <ul class="emergency-steps">
+          <li class="emergency-step"><span class="emergency-step-num">1</span><p>Call <strong>112</strong> (Nigeria) or <strong>767</strong> (Lagos) for life-threatening emergencies.</p></li>
+          <li class="emergency-step"><span class="emergency-step-num">2</span><p>Contact the facility directly before travelling to confirm they can receive you.</p></li>
+          <li class="emergency-step"><span class="emergency-step-num">3</span><p>CareSync shows facility contacts and directions only. It does not dispatch help.</p></li>
+          <li class="emergency-step"><span class="emergency-step-num">4</span><p>Always call the facility before travelling to confirm they can receive you and that the information shown is current.</p></li>
         </ul>
       </div>
     </div>
+
   </main>
 </div>
 
@@ -112,8 +118,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     <div class="referral-item">
       <div class="referral-item-info">
         <div class="referral-item-facilities">${f.name}</div>
-        <div class="referral-item-meta">${f.address} &nbsp;·&nbsp; ${f.distance} km away</div>
-        <div class="referral-item-meta" style="margin-top:4px"><a href="tel:${f.phone}" style="color:var(--color-primary);font-weight:600">${f.phone}</a></div>
+        <div class="referral-item-meta">${f.address} &nbsp;&middot;&nbsp; ${f.distance} km away</div>
+        <div class="referral-item-meta"><a href="tel:${f.phone}" class="referral-meta-link">${f.phone}</a></div>
       </div>
       <div class="referral-item-actions">
         <span class="badge badge-success">24h</span>
@@ -121,18 +127,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
     </div>`).join('');
 
-  // Map
   requestAnimationFrame(() => {
     const mapEl = document.getElementById('emergency-map');
     const m = L.map(mapEl, { scrollWheelZoom: false }).setView([6.5244, 3.3792], 11);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(m);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(m);
     const markers = emergency.map(f => {
-      const icon = L.divIcon({className:'',html:'<div style="background:#DC2626;width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5)"></div>',iconSize:[16,16],iconAnchor:[8,8]});
-      return L.marker([f.lat,f.lng],{icon}).addTo(m).bindPopup(`<strong>${f.name}</strong><br>${f.phone}`);
+      const icon = L.divIcon({ className: '', html: '<div style="background:#DC2626;width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.5)"></div>', iconSize: [16,16], iconAnchor: [8,8] });
+      return L.marker([f.lat, f.lng], { icon }).addTo(m).bindPopup(`<strong>${f.name}</strong><br>${f.phone}`);
     });
     if (markers.length) m.fitBounds(L.featureGroup(markers).getBounds().pad(0.3));
-    mapEl.querySelectorAll('svg').forEach(s=>{s.style.maxWidth='none';s.style.maxHeight='none';});
-    setTimeout(()=>m.invalidateSize(),300);
+    mapEl.querySelectorAll('svg').forEach(s => { s.style.maxWidth = 'none'; s.style.maxHeight = 'none'; });
+    setTimeout(() => m.invalidateSize(), 300);
   });
 });
 </script>

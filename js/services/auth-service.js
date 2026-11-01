@@ -1,4 +1,4 @@
-// js/services/auth-service.js
+﻿// js/services/auth-service.js
 // Handles login, registration, logout, and session state.
 //
 // BACKEND INTEGRATION:
@@ -20,9 +20,9 @@ CareSync.auth = (() => {
     } catch {}
     // Default accounts
     return [
-      { id: 'u1', name: 'Amara Okafor',  email: 'patient@careroute.ng',  password: 'CareRoute1!', role: 'patient',  phone: '+234 801 234 5678' },
-      { id: 'u2', name: 'Lagos General', email: 'facility@careroute.ng', password: 'CareRoute1!', role: 'facility', phone: '+234 802 345 6789' },
-      { id: 'u3', name: 'Admin User',    email: 'admin@careroute.ng',    password: 'CareRoute1!', role: 'admin',    phone: '+234 803 456 7890' },
+      { id: 'u1', name: 'Amara Okafor',  email: 'patient@CareSync.ng',  password: 'CareSync1!', role: 'patient',  phone: '+234 801 234 5678' },
+      { id: 'u2', name: 'Lagos General', email: 'facility@CareSync.ng', password: 'CareSync1!', role: 'facility', phone: '+234 802 345 6789' },
+      { id: 'u3', name: 'Admin User',    email: 'admin@CareSync.ng',    password: 'CareSync1!', role: 'admin',    phone: '+234 803 456 7890' },
     ];
   }
 

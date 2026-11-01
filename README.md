@@ -1,10 +1,10 @@
-# CareRoute
+﻿# CareSync
 
 **Healthcare access, navigation and referral coordination platform.**
 
-CareRoute helps patients find appropriate healthcare facilities, navigate referrals between providers, and access emergency healthcare information. It connects patients, healthcare facilities, and administrators through a unified digital interface.
+CareSync helps patients find appropriate healthcare facilities, navigate referrals between providers, and access emergency healthcare information. It connects patients, healthcare facilities, and administrators through a unified digital interface.
 
-> CareRoute is an information and navigation tool. It does not provide medical advice, diagnosis, or emergency dispatch.
+> CareSync is an information and navigation tool. It does not provide medical advice, diagnosis, or emergency dispatch.
 
 ---
 
@@ -26,16 +26,16 @@ Then open **http://localhost:5500**
 
 | Role     | Email                      | Password     |
 |----------|---------------------------|--------------|
-| Patient  | patient@careroute.ng      | CareRoute1!  |
-| Facility | facility@careroute.ng     | CareRoute1!  |
-| Admin    | admin@careroute.ng        | CareRoute1!  |
+| Patient  | patient@CareSync.ng      | CareSync1!  |
+| Facility | facility@CareSync.ng     | CareSync1!  |
+| Admin    | admin@CareSync.ng        | CareSync1!  |
 
 ---
 
 ## Project structure
 
 ```
-careroute/
+CareSync/
 ├── index.html               # Public landing page
 ├── find-care.html           # Public facility search (no login required)
 ├── about.html
@@ -237,7 +237,7 @@ POST   /contact
 
 ## Disclaimer
 
-CareRoute is a healthcare navigation tool. It does not:
+CareSync is a healthcare navigation tool. It does not:
 - Provide medical advice or diagnosis
 - Dispatch ambulances or emergency services
 - Guarantee facility availability or appointment slots

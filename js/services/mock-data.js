@@ -1,4 +1,4 @@
-// js/services/mock-data.js
+﻿// js/services/mock-data.js
 // Central synthetic data store used when USE_MOCK = true.
 // Replace individual collections with API responses when backend is ready.
 
@@ -24,9 +24,9 @@ CareSync.mockData = (() => {
   ];
 
   const USERS = [
-    { id:'u1', name:'Amara Okafor',        email:'patient@careroute.ng',  role:'patient',  status:'Active',   joined:'2026-09-01', phone:'+234 801 234 5678' },
-    { id:'u2', name:'Lagos General',       email:'facility@careroute.ng', role:'facility', status:'Active',   joined:'2026-08-15', phone:'+234 802 345 6789' },
-    { id:'u3', name:'Admin User',          email:'admin@careroute.ng',    role:'admin',    status:'Active',   joined:'2026-07-01', phone:'+234 803 456 7890' },
+    { id:'u1', name:'Amara Okafor',        email:'patient@CareSync.ng',  role:'patient',  status:'Active',   joined:'2026-09-01', phone:'+234 801 234 5678' },
+    { id:'u2', name:'Lagos General',       email:'facility@CareSync.ng', role:'facility', status:'Active',   joined:'2026-08-15', phone:'+234 802 345 6789' },
+    { id:'u3', name:'Admin User',          email:'admin@CareSync.ng',    role:'admin',    status:'Active',   joined:'2026-07-01', phone:'+234 803 456 7890' },
     { id:'u4', name:'Chidi Eze',           email:'c.eze@example.ng',      role:'patient',  status:'Active',   joined:'2026-09-22', phone:'+234 804 567 8901' },
     { id:'u5', name:'Ngozi Adeyemi',       email:'n.adeyemi@example.ng',  role:'patient',  status:'Inactive', joined:'2026-08-03', phone:'+234 805 678 9012' },
     { id:'u6', name:'Reddington Hospital', email:'info@reddington.ng',    role:'facility', status:'Pending',  joined:'2026-10-01', phone:'+234 805 444 5555' },

@@ -74,7 +74,7 @@
 }
 
 .auth-brand-content p {
-  color: #94A3B8;
+  color: var(--color-dark-text-muted);
   font-size: var(--fs-lg);
   max-width: 38ch;
   line-height: 1.7;
@@ -118,12 +118,12 @@
 }
 
 .auth-brand-feature-text span {
-  color: #94A3B8;
+  color: var(--color-dark-text-muted);
   font-size: var(--fs-sm);
 }
 
 .auth-brand-footer {
-  color: #475569;
+  color: var(--color-dark-border-alt);
   font-size: var(--fs-sm);
   position: relative;
   z-index: 1;
@@ -417,13 +417,13 @@
 .auth-alert.is-error {
   background: var(--color-danger-bg);
   border-left-color: var(--color-danger);
-  color: #991B1B;
+  color: var(--color-danger-text);
 }
 
 .auth-alert.is-success {
   background: var(--color-success-bg);
   border-left-color: var(--color-success);
-  color: #166534;
+  color: var(--color-success-text);
 }
 
 .auth-alert[hidden] { display: none; }
