@@ -3,24 +3,38 @@
 //
 // BACKEND INTEGRATION:
 //   Set CareSync.config.USE_MOCK = false in api-config.js.
-//   The login / register / logout functions will call the real API
-//   endpoints defined in CareSync.config.ENDPOINTS.
+//   All functions below automatically switch to real API calls.
 
 CareSync.auth = (() => {
   'use strict';
 
-  // ── Placeholder credentials used while USE_MOCK = true ───────────────────
-  // These are removed or replaced when the real backend is connected.
-  const MOCK_USERS = [
-    { id: 'u1', name: 'Amara Okafor',     email: 'patient@careroute.ng',  password: 'CareRoute1!', role: 'patient',  phone: '+234 801 234 5678' },
-    { id: 'u2', name: 'Lagos General',    email: 'facility@careroute.ng', password: 'CareRoute1!', role: 'facility', phone: '+234 802 345 6789' },
-    { id: 'u3', name: 'Admin User',       email: 'admin@careroute.ng',    password: 'CareRoute1!', role: 'admin',    phone: '+234 803 456 7890' },
-  ];
+  // ── Placeholder accounts used while USE_MOCK = true ──────────────────────
+  // Loaded from sessionStorage so registrations survive page navigation
+  // within the same browser session. Cleared on tab close.
+  const STORAGE_KEY = 'cr_users';
+
+  function _loadUsers() {
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    // Default accounts
+    return [
+      { id: 'u1', name: 'Amara Okafor',  email: 'patient@careroute.ng',  password: 'CareRoute1!', role: 'patient',  phone: '+234 801 234 5678' },
+      { id: 'u2', name: 'Lagos General', email: 'facility@careroute.ng', password: 'CareRoute1!', role: 'facility', phone: '+234 802 345 6789' },
+      { id: 'u3', name: 'Admin User',    email: 'admin@careroute.ng',    password: 'CareRoute1!', role: 'admin',    phone: '+234 803 456 7890' },
+    ];
+  }
+
+  function _saveUsers(users) {
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(users)); } catch {}
+  }
 
   function _delay(ms = 600) { return new Promise(r => setTimeout(r, ms)); }
 
   function _mockLogin(email, password) {
-    const user = MOCK_USERS.find(
+    const users = _loadUsers();
+    const user  = users.find(
       u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
     );
     if (!user) throw { type: 'auth', message: 'Incorrect email or password. Please try again.' };
@@ -29,17 +43,21 @@ CareSync.auth = (() => {
   }
 
   function _mockRegister(data) {
-    const exists = MOCK_USERS.find(u => u.email.toLowerCase() === data.email.toLowerCase());
+    const users  = _loadUsers();
+    const exists = users.find(u => u.email.toLowerCase() === data.email.toLowerCase());
     if (exists) throw { type: 'auth', message: 'An account with this email already exists.' };
+
     const newUser = {
-      id:       'u' + (MOCK_USERS.length + 1),
+      id:       'u' + (users.length + 1) + '_' + Date.now(),
       name:     data.name,
       email:    data.email,
       password: data.password,
       role:     data.accountType || 'patient',
       phone:    data.phone || ''
     };
-    MOCK_USERS.push(newUser);
+    users.push(newUser);
+    _saveUsers(users);   // persist within session so login works immediately after
+
     const token = 'session_' + newUser.id + '_' + Date.now();
     return { token, user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role } };
   }
@@ -55,18 +73,29 @@ CareSync.auth = (() => {
 
   function isLoggedIn() { return !!getSession(); }
 
-  function getRoleRedirect(role) {
-    const base = _baseDir();
-    switch (role) {
-      case 'facility': return base + 'facility/dashboard.html';
-      case 'admin':    return base + 'admin/dashboard.html';
-      default:         return base + 'patient/dashboard.html';
-    }
+  // ── Reliable base-path resolution ─────────────────────────────────────────
+  // Uses the page's actual depth relative to the project root instead of
+  // counting slashes, which breaks on IP addresses like 127.0.0.1.
+
+  function _rootUrl() {
+    // Walk up from the current page to the project root.
+    // Pages are at depths:
+    //   root level  (index.html, find-care.html)        → depth 0
+    //   one level   (auth/, patient/, facility/, admin/) → depth 1
+    const path   = window.location.pathname; // e.g. /patient/dashboard.html
+    const parts  = path.split('/').filter(Boolean); // ['patient','dashboard.html']
+    const depth  = parts.length - 1;                // 1 for /patient/foo.html, 0 for /foo.html
+    const prefix = depth > 0 ? '../'.repeat(depth) : '';
+    return window.location.origin + '/' + prefix;
   }
 
-  function _baseDir() {
-    const depth = (window.location.pathname.match(/\//g) || []).length - 1;
-    return depth > 1 ? '../' : '';
+  function getRoleRedirect(role) {
+    const root = _rootUrl();
+    switch (role) {
+      case 'facility': return root + 'facility/dashboard.html';
+      case 'admin':    return root + 'admin/dashboard.html';
+      default:         return root + 'patient/dashboard.html';
+    }
   }
 
   // ── Auth operations ───────────────────────────────────────────────────────
@@ -106,15 +135,22 @@ CareSync.auth = (() => {
       try { await CareSync.api.post(CareSync.config.ENDPOINTS.logout); } catch {}
     }
     CareSync.api.clearToken();
+    try { sessionStorage.removeItem('cr_name'); } catch {}
   }
 
   // ── Route guard ───────────────────────────────────────────────────────────
-  // Call at the top of every protected page.
+  // Call this at the top of every protected page's DOMContentLoaded handler.
+  // Returns true if access is allowed, false + redirects if not.
+
   function requireAuth(allowedRoles) {
     const session = getSession();
     if (!session) {
-      const base = _baseDir();
-      window.location.href = base + 'auth/login.html?next=' + encodeURIComponent(window.location.pathname);
+      // Redirect to login with an absolute ?next= URL so the server
+      // never resolves to /patient/auth/login.html
+      const root      = _rootUrl();
+      const loginUrl  = root + 'auth/login.html';
+      const nextParam = encodeURIComponent(window.location.href);
+      window.location.href = loginUrl + '?next=' + nextParam;
       return false;
     }
     if (allowedRoles && !allowedRoles.includes(session.role)) {
